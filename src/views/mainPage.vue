@@ -141,11 +141,9 @@
         },
         beforeDestroy() {
             sessionStorage.removeItem('user')
+            sessionStorage.removeItem('token')
         },
         methods: {
-            noOpen() {
-                this.$alert('钱包功能暂未开放，敬请期待！')
-            },
             routeChange(val) {
               //判断用户是否已登录
                 if(sessionStorage.getItem('user')) {
@@ -199,6 +197,7 @@
             },
             loginout() {
               sessionStorage.removeItem('user');
+              sessionStorage.removeItem('token');
               this.login = false;
               this.$router.push('/login')
             }

@@ -6,6 +6,7 @@
         </div>
         <div class="list">
             <h4>企业抵押TITT申请表</h4>
+            <p style="margin: 0px auto 20px;text-align: center;color: #f07e1b;">（如需提交申请，请先注册登录）</p>
             <div class="form">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
                     <div class="row">
@@ -18,6 +19,13 @@
                             <el-form-item label="申请类别">
                                 <el-select v-model="ruleForm.type" placeholder="请选择" style="width: 100%;">
                                     <el-option label="超级节点" value="超级节点"></el-option>
+                                    <el-option label="电子商城 " value="电子商城 "></el-option>
+                                    <el-option label="合作供货 " value="合作供货 "></el-option>
+                                    <el-option label="DAPP开发合作 " value="DAPP开发合作 "></el-option>
+                                    <el-option label="去中心化交易所" value="去中心化交易所"></el-option>
+                                    <el-option label="托管中心" value="托管中心"></el-option>
+                                    <el-option label="备选节点" value="备选节点"></el-option>
+                                    <el-option label="其他合作" value="其他合作"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
@@ -211,14 +219,10 @@
                             </el-upload>
                         </div>
                     </div>
-                    <div style="padding-left: 14px;margin-bottom: 10px;">
-                        实体企业合作抵押文件
-                        <el-button style="margin-left: 10px;" type="primary" plain>点击下载</el-button>
-                    </div>
                     <p class="rule">
                         <el-checkbox v-model="checked"></el-checkbox>
                         我已阅读并同意
-                        <router-link to="/divideAgreement?type=company">《抵押分红协议》</router-link>
+                        <router-link to="/divideAgreement?type=company" target="_blank">《实体企业抵押分红文件》</router-link>
                     </p>
                     <div style="text-align: center;margin-top: 30px;">
                         <el-button type="primary" style="width: 220px;" @click="subApply">提交申请</el-button>
@@ -342,6 +346,14 @@
                 return isLt5M;
             },
             subApply() {
+                if(!sessionStorage.getItem('user')) {
+                    this.$message({
+                        message: '请先登录！',
+                        error: 'info'
+                    });
+                    this.$router.push('/login');
+                    return false
+                }
                 if(!this.checked) {
                     this.$message({
                         message: '请阅读抵押协议并同意！',
@@ -364,7 +376,12 @@
                                 params.jietu = this.img2;
                                 params.yingyezhizhao = this.img;
                                 params.f = 2;
+                                params.token = sessionStorage.getItem('token');
                                 this.$axios.post('Huodong/setHuoDong',params).then(res => {
+                                    if(res.data.sta == 401) {
+                                        this.$message.error("请重新登录！");
+                                        this.$router.push('/login')
+                                    }
                                     if(res.data.sta == 1) {
                                         this.$message({
                                             message: '提交成功！',
@@ -412,7 +429,7 @@
             box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.16);
             border-radius: 3px;
             h4 {
-                margin: 40px 0 60px;
+                margin: 40px 0 20px;
                 font-size: 30px;
                 color: #303133;
                 text-align: center;

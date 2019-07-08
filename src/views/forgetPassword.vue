@@ -11,7 +11,7 @@
                 <div class="check-phone" v-if="active==0">
                     <el-input v-model="formData.email" placeholder="请输入您的注册邮箱"></el-input>
                     <el-button type="primary" style="width: 100%;margin: 30px 0 0;" @click="sureEmail">打开邮箱验证</el-button>
-                    <router-link to="" class="forget">还没有财富链账号？去注册</router-link>
+                    <router-link to="/register" class="forget">还没有财富链账号？去注册</router-link>
                 </div>
                 <div style="max-width: 400px;margin: 0 auto;" v-else>
                     <el-input v-model="formData.pwd" style="margin-bottom:20px" placeholder="请输入新的登录密码，至少8位" show-password></el-input>

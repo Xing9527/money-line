@@ -9,7 +9,7 @@
             <div class="change">
                 <div class="can-change">
                     <p>当前可兑换红股数量</p>
-                    <p>{{hongguweijiesuo}}</p>
+                    <p>{{$route.query.hongguweijiesuo}}</p>
                 </div>
                 <div class="input">
                     <div class="top">
@@ -77,7 +77,11 @@
                 this.getWeekList()
             },
             getWeekList() {
-                this.$axios.get('user/applytotitt').then(res => {
+                this.$axios.get('user/applytotitt',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        this.$message.error("请重新登录！");
+                        this.$router.push('/login')
+                    }
                     if(res.data.data) {
                         this.changeList = res.data.data;
                     }
@@ -89,12 +93,20 @@
                 }else if(!this.titt) {
                     this.$message.error('请输入titt账号！');
                 }else {
-                    this.$axios.post('user/honggutotitt', { num: this.hongguNum, titt: this.titt }).then(res => {
+                    this.$axios.post('user/honggutotitt', { num: this.hongguNum, titt: this.titt, token:sessionStorage.getItem('token') }).then(res => {
+                        if(res.data.sta == 401) {
+                            this.$message.error("请重新登录！");
+                            this.$router.push('/login')
+                        }
                         if(res.data.sta == 1) {
                             this.$message({
                                 message: res.data.msg,
                                 type: 'success'
                             });
+
+                            this.hongguNum = '';
+                            this.titt = '';
+                            this.getWeekList()
                         }else {
                             this.$message.error(res.data.msg);
                         }

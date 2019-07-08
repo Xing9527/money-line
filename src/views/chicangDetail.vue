@@ -65,7 +65,11 @@
         },
         methods: {
             getDetail() {
-                this.$axios.get('user/chicangdetail',{ id:this.$route.query.id }).then(res => {
+                this.$axios.get('user/chicangdetail',{ id:this.$route.query.id,token:sessionStorage.getItem('token') }).then(res => {
+                    if(res.data.sta == 401) {
+                        this.$message.error("请重新登录！");
+                        this.$router.push('/login')
+                    }
                     if(res.data.data) {
                         this.detail = res.data.data.list;
                     }

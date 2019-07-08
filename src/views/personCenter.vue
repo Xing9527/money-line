@@ -7,60 +7,61 @@
                         <div class="info-left col-lg-4 col-md-4 col-sm-12">
                             <img class="header-img" src="../assets/images/center-header.png" alt=""/>
                             <p class="phone">{{userName}}</p>
-                            <span class="kyc" @click="$router.push('/kyc1')">
+                            <span class="kyc" @click="routerPush('/kyc1')">
                                 <img src="../assets/images/kyc1.png" alt=""/>
                                 <span>KYC1认证</span>
                             </span>
-                            <span class="kyc" @click="$router.push('/kyc2')">
+                            <span class="kyc" @click="routerPush('/kyc2')">
                                 <img src="../assets/images/kyc2.png" alt=""/>
                                 <span>KYC2认证</span>
                             </span>
                         </div>
                         <div class="info-right col-lg-8 col-md-8 col-sm-12">
                             <div style="text-align: right;">
-                                <el-button type="primary" size="small" @click='qiandao'>申请领取好友助力50红股</el-button>
-                                <el-button type="primary" size="small" @click='qiandao'>签到送10红股</el-button>
+                                <el-button type="primary" size="small" @click='qiandao'>申请领取好友助力{{info.friendHongGu}}红股</el-button>
+                                <el-button type="primary" size="small" @click='qiandao' v-if="info.qiandaoStatus==2">签到送10红股</el-button>
+                                <el-button type="info" size="small" v-else>已签到</el-button>
                             </div>
-                            <p>TITT数额</p>
-                            <h5>{{titt}}</h5>
-                            <el-button size="small" type="primary" plain style="margin:10px 10px 0 0;" @click="$router.push('/volunteerApply')">申请志愿者</el-button>
-                            <el-button size="small" type="info" plain style="margin: 10px 0 0 0;">复制志愿者推广邀请二维码</el-button>
+                            <p>TITT数量</p>
+                            <h5>{{info.titt}}</h5>
+                            <el-button size="small" type="primary" plain style="margin:10px 10px 0 0;" @click="routerPush('/volunteerApply')">申请志愿者</el-button>
+                            <el-button size="small" type="info" plain style="margin: 10px 0 0 0;" @click="copyVisiteCode(3)" class="copy3" :data-clipboard-text="copyTuiguangma">复制志愿者推广邀请码</el-button>
                         </div>
                     </div>
                 </div>
                 <div class="honggu">
                     <div class="left">
                         <p>已解锁红股数量</p>
-                        <p>{{hongguyijiesuo}}</p>
+                        <p>{{info.hongguyijiesuo}}</p>
                     </div>
-                    <el-button class="btn1" size="small" @click="$router.push('/hongguChange')">兑换TITT</el-button>
+                    <el-button class="btn1" size="small" @click="routerPush('/hongguChange')">兑换TITT</el-button>
                     <div class="right">
                         <p>未解锁红股数量</p>
-                        <p>{{hongguweijiesuo}}</p>
+                        <p>{{info.hongguweijiesuo}}</p>
                     </div>
-                    <el-button class="btn2" type="primary" size="small" @click="$router.push('/hongguCode')">红股兑换码</el-button>
+                    <el-button class="btn2" type="primary" size="small" @click="routerPush('/hongguCode')">红股兑换码</el-button>
                 </div>
                 <div class="award-record" style="overflow: hidden">
-                    <h5>TITT总量：{{titt}}TITT</h5>
+                    <h5>TITT总量：{{info.titt}}TITT</h5>
                     <el-row class="award-title">
                         <el-col :span="10">日期</el-col>
                         <el-col :span="7">持仓TITT数量</el-col>
                         <el-col :span="7">持仓交易明细</el-col>
                     </el-row>
                     <el-row class="award-item" v-for="(item,index) in chicangList" :key="index">
-                        <el-col :span="10">{{item.createtime}}</el-col>
+                        <el-col :span="10">{{item.createdtime}}</el-col>
                         <el-col :span="7" style="color: #f07e1b;">{{item.tittnum}}</el-col>
                         <el-col :span="7" style="color: #f07e1b;">
                             <el-button type="text" @click="$router.push({ path:'/chicangDetail',query:{ id:item.id } })">详情</el-button>
                         </el-col>
                     </el-row>
-                    <el-button type="text" style="float: right;margin-right: 30px;" @click="$router.push('/chicangList')">更多持仓交易明细>></el-button>
+                    <el-button type="text" style="float: right;margin-right: 30px;" @click="routerPush('/chicangList')">更多持仓交易明细>></el-button>
                 </div>
                 <div class="invite">
                     <el-row class="row">
                         <el-col :span="8" class="friend">
-                            <span>获得邀请奖励</span>
-                            <span>{{num1}}</span>
+                            <span>志愿者获得奖励</span>
+                            <span>{{num4}}</span>
                         </el-col>
                         <el-col :span="8" class="friend">
                             <span>直接邀请志愿者数量</span>
@@ -75,8 +76,8 @@
                 <div class="invite">
                     <el-row class="row">
                         <el-col :span="8" class="friend">
-                            <span>志愿者获得奖励</span>
-                            <span>{{num4}}</span>
+                            <span>获得邀请奖励</span>
+                            <span>{{num1}}</span>
                         </el-col>
                         <el-col :span="8" class="friend">
                             <span>直接好友数量</span>
@@ -149,8 +150,8 @@
                     <div class="pledge">
                         <div class="pledge-top clear">
                             <div class="all-pledge">
-                                <p>总抵押数额</p>
-                                <span>24680</span>
+                                <p>总抵押数量</p>
+                                <span>{{info.diyaNum}}</span>
                             </div>
                             <h5>可参加抵押活动</h5>
                             <el-button v-for="(item,index) in diyaList" :key="index" :type="item.status==1?'primary':'info'" style="margin:20px 30px 0 0" size="small" @click="goDiya(item)">{{item.time1 | timeTrans}}{{item.title}}【<span v-if="item.type==1">企业抵押</span><span v-else>个人抵押</span>】</el-button>
@@ -200,6 +201,10 @@
                                         <el-col :span="7">抵押分红解锁</el-col>
                                         <el-col :span="17" style="padding-left: 5px;">{{item.diyafenhongjiesuo}}</el-col>
                                     </el-row>
+                                    <el-row class="right-row">
+                                        <el-col :span="7">活动状态</el-col>
+                                        <el-col :span="17" style="padding-left: 5px;"><span v-if="item.endStatus == 2">已结束</span><span v-else>未结束</span></el-col>
+                                    </el-row>
                                 </div>
                             </div>
                         </div>
@@ -235,6 +240,7 @@
                 num6:0,
                 newsList: [],
                 copyValue:'',
+                copyTuiguangma:'',
                 page1:1,
                 page3:1,
                 recordTotal:0,
@@ -246,34 +252,64 @@
                 chicangList:[],
                 hongguyijiesuo:'',
                 hongguweijiesuo:'',
+                info:{}
             }
         },
         mounted() {
-            if(!sessionStorage.getItem('user')) {
-                this.$message({
-                    message: '请先登录！',
-                    type: 'info'
-                });
-                this.$router.push('/login')
-                return
-            }
-
+            this.getInfo();
             this.getNewsList();
             this.getAwardList();
             this.getNums();
             this.getDiya();
             this.getDoneDiya();
-            this.getChicang()
+            this.getChicang();
             var str = JSON.parse(sessionStorage.getItem('user'));//获取邀请码
             this.copyValue = str.yaoqingma;
+            this.copyTuiguangma = str.tuiguangma;
             this.userName = str.username;
             this.titt = str.titt;
             this.hongguyijiesuo = str.hongguyijiesuo;
             this.hongguweijiesuo = str.hongguweijiesuo;
         },
         methods: {
+            getInfo() {
+                this.$axios.get('user/userinfo',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
+                    this.info = res.data;
+                })
+            },
+            checkLogin() {
+                if(!sessionStorage.getItem('user')) {
+                    this.$message({
+                        message: '请先登录！',
+                        error: 'info'
+                    });
+                    this.$router.push('/login');
+                    return false
+                }else {
+                    return true
+                }
+            },
+            routerPush(url) {
+                if(this.checkLogin()) {
+                    if(url == '/hongguChange') {
+                        this.$router.push({path:url,query:{hongguweijiesuo:this.info.hongguweijiesuo}})
+                    }else {
+                        this.$router.push(url)
+                    }
+                };
+            },
             getChicang() {
-                this.$axios.get('user/chicang').then(res => {
+                this.$axios.get('user/chicang',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
                     if(res.data.sta == 1) {
                         this.chicangList = res.data.data;
                     }
@@ -287,11 +323,16 @@
                 }
             },
             copyVisiteCode(val) {
+                if(!this.checkLogin()) {
+                    return false
+                };
                 if(val == 1) {
                     var clipboard = new Clipboard('.copy1');
 
-                }else {
+                }else if(val == 2){
                     var clipboard = new Clipboard('.copy2');
+                }else {
+                    var clipboard = new Clipboard('.copy3');
                 }
                 var that = this;
                 clipboard.on('success', function(e) {
@@ -325,7 +366,12 @@
                 })
             },
             getAwardList() {
-                this.$axios.get('user/jianglijilu',{p:this.page1}).then(res => {
+                this.$axios.get('user/jianglijilu',{p:this.page1,token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
                     if(res.data.data) {
                         this.awardList = res.data.data.list;
                         this.recordTotal = res.data.data.totalPage;
@@ -333,7 +379,12 @@
                 })
             },
             getNums() {
-                this.$axios.get('user/getnum',{type:1}).then(res => {
+                this.$axios.get('user/getnum',{type:1,token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
                     if(res.data) {
                         this.num1 = res.data.data1
                         this.num2 = res.data.data5
@@ -345,7 +396,12 @@
                 })
             },
             getDiya() {
-                this.$axios.get('user/huodonglist',{p:this.page2}).then(res => {
+                this.$axios.get('user/huodonglist',{p:this.page2,token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
                     if(res.data.data) {
                         this.diyaList = res.data.data.list;
                         this.diyaTotal = res.data.data.totalPage
@@ -353,16 +409,26 @@
                 })
             },
             getDoneDiya() {
-                this.$axios.get('user/myhuodong',{p:this.page3}).then(res => {
-                    if(res.data.data) {
-                        this.doneHuodong = res.data.data.list;
-                        this.total3 = res.data.data.totalPage
+                this.$axios.get('user/myhuodong',{p:this.page3,token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
+                    if(res.data) {
+                        this.doneHuodong = res.data.list;
+                        this.total3 = res.data.totalPage
                     }
                 })
             },
             qiandao() {
-                this.$axios.post('user/qiandao').then(res => {
+                this.$axios.post('user/qiandao',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        this.$message.error("请重新登录！");
+                        this.$router.push('/login')
+                    }
                     if(res.data.sta == 1) {
+                        this.info.qiandaoStatus = 1;
                         this.$message({
                             message: '签到成功！',
                             type: 'success'

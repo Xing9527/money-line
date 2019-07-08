@@ -139,23 +139,23 @@
         },
         mounted() {
             this.phoneList = phone;
-            if(sessionStorage.getItem('user')) {
-                var user = JSON.parse(sessionStorage.getItem('user'))
-                if(user.kyc2 == '1') {
-                    this.active = 3
-                }else if(user.kyc2 == '2') {
-                    this.active = 2
-                }else if(user.kyc2 == '3' ||user.kyc1 == '4') {
-                    this.active = 0
-                }
-            }
         },
         methods: {
-            handleSizeChange(size) {
-                this.size = size;
-            },
-            handleCurrentChange(page) {
-                this.page = page;
+            getInfo() {
+                this.$axios.get('user/userinfo',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
+                    if(res.data.kyc2 == '1') {
+                        this.active = 3
+                    }else if(res.data.kyc2 == '2') {
+                        this.active = 2
+                    }else if(res.data.kyc2 == '3' ||res.data.kyc2 == '4') {
+                        this.active = 0
+                    }
+                })
             },
             nextStep(step) {
                 //状态切换页面回到顶部
@@ -189,15 +189,25 @@
                     country:this.ruleForm.country,
                     card1:this.img1,
                     card2:this.img2,
-                    card3:this.img3
+                    card3:this.img3,
+                    token:sessionStorage.getItem('token')
                 }
                 this.$axios.post('user/kyc2renzheng',params).then(res => {
+                    if(res.data.sta == 401) {
+                        this.$message.error("请重新登录！");
+                        this.$router.push('/login')
+                    }
                     if(res.data.sta == 1) {
                         this.$message({
                             message: res.data.msg,
                             type: 'success'
                         });
                         this.active = 2;
+                        if(sessionStorage.getItem('user')) {
+                            var user = JSON.parse(sessionStorage.getItem('user'))
+                            user.kyc2 = 2;
+                            sessionStorage.setItem('user',JSON.stringify(user))
+                        }
                     }else {
                         this.$message({
                             message: res.data.msg,

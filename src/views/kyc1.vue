@@ -24,7 +24,7 @@
                     <el-form-item label="姓名" prop="name">
                         <el-input placeholder="请输入您的姓名" v-model="ruleForm.name"></el-input>
                     </el-form-item>
-                    <el-form-item label="身份证" prop="id_code">
+                    <el-form-item label="证件信息" prop="card">
                         <el-input placeholder="请输入您的身份证号码" v-model="ruleForm.card"></el-input>
                     </el-form-item>
                 </el-form>
@@ -80,24 +80,41 @@
         },
         mounted() {
             this.phoneList = phone;
-            if(sessionStorage.getItem('user')) {
-                var user = JSON.parse(sessionStorage.getItem('user'))
-                if(user.kyc1 == '1') {
-                    this.agree = '2'
-                }else if(user.kyc1 == '2') {
-                    this.agree = '1'
-                }else if(user.kyc1 == '3' ||user.kyc1 == '4') {
-                    this.agree = '0'
-                }
-            }
+            this.getInfo()
         },
         methods: {
+            getInfo() {
+                this.$axios.get('user/userinfo',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
+                    if(res.data.kyc1 == '1') {
+                        this.agree = '2'
+                    }else if(res.data.kyc1 == '2') {
+                        this.agree = '1'
+                    }else if(res.data.kyc1 == '3' ||res.data.kyc1 == '4') {
+                        this.agree = '0'
+                    }
+                })
+            },
             subData() {
                 this.$refs['ruleForm'].validate((valid) => {
                     if (valid) {
+                        this.ruleForm.token = sessionStorage.getItem('token')
                         this.$axios.post('user/kyc1renzheng',this.ruleForm).then(res => {
+                            if(res.data.sta == 401) {
+                                this.$message.error("请重新登录！");
+                                this.$router.push('/login')
+                            }
                             if(res.data.sta == 1) {
-                                this.agree = '1'                                
+                                this.agree = '1' ;
+                                if(sessionStorage.getItem('user')) {
+                                    var user = JSON.parse(sessionStorage.getItem('user'))
+                                    user.kyc1 = 1;
+                                    sessionStorage.setItem('user',JSON.stringify(user))
+                                }
                             }
                         })
                     } else {

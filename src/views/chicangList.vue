@@ -13,7 +13,7 @@
                     <el-col :span="8">详细信息</el-col>
                 </el-row>
                 <el-row class="list-item" v-for="(item,index) in changeList" :key="index">
-                    <el-col :span="8">{{item.createtime}}</el-col>
+                    <el-col :span="8">{{item.createdtime}}</el-col>
                     <el-col :span="8">{{item.tittnum}}</el-col>
                     <el-col :span="8">
                         <el-button type="text" @click="$router.push({ path:'/chicangDetail',query:{ id:item.id } })">详情</el-button>
@@ -47,7 +47,11 @@
                 this.getWeekList()
             },
             getWeekList() {
-                this.$axios.get('user/chicang',{name:'more'}).then(res => {
+                this.$axios.get('user/chicang',{name:'more',token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        this.$message.error("请重新登录！");
+                        this.$router.push('/login')
+                    }
                     if(res.data.data) {
                         this.changeList = res.data.data.list;
                     }

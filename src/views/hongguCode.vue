@@ -10,9 +10,9 @@
                 <p>输入兑换码获得红股奖励，红股可兑换TITT。</p>
                 <p>未注册用户需要注册后才可获得红股兑换奖励。</p>
                 <el-input v-model="num" style="max-width: 500px;margin: 50px 0 10px;" placeholder="输入21位红股兑换码查询或兑换"></el-input>
-                <p v-if="pass" style="margin: 0 0 30px;">该兑换码可兑换<span>{{honggunum}}</span>红股，相当于<span>{{tittnum}}</span>TITT。市值≈<span>0.6</span>USDT。</p>
-                <el-button v-if="!pass" type="primary" style="width: 200px;display: block;margin: 0 auto;" @click="applyChange">查询兑换码</el-button>
-                <el-button v-else type="primary" style="width: 200px;" @click="sureChange">使用兑换码</el-button>
+                <p v-if="pass" style="margin: 0 0 30px;">该兑换码可兑换<span>{{resData.honggunum}}</span>红股，相当于<span>{{resData.tittnum}}</span>TITT。</p>
+                <el-button v-if="!pass" type="primary" style="width: 200px;display: block;margin: 20px auto 0;" @click="applyChange">查询兑换码</el-button>
+                <el-button v-else type="primary" style="width: 200px;margin: 20px auto 0;" @click="sureChange">使用兑换码</el-button>
             </div>
         </div>
     </div>
@@ -24,8 +24,8 @@
         data() {
             return {
                 num:'',
-                pass:true,
-                resData:{}
+                pass:false,
+                resData:{},
             }
         },
         mounted() {
@@ -36,7 +36,11 @@
                 if(!this.num ||this.num.length != 21) {
                     this.$message.error('请输入正确格式的红股兑换码！');
                 }else {
-                    this.$axios.get('user/usecoupon1',{num:this.num}).then(res => {
+                    this.$axios.get('user/usecoupon1',{coupon:this.num,token:sessionStorage.getItem('token')}).then(res => {
+                        if(res.data.sta == 401) {
+                            this.$message.error("请重新登录！");
+                            this.$router.push('/login')
+                        }
                         if(res.data.sta == 1) {
                             this.pass = true;
                             this.resData = res.data.data;
@@ -47,10 +51,18 @@
                 }
             },
             sureChange() {
-                this.$axios.post('user/usecoupon2',{num:this.num}).then(res => {
+                this.$axios.post('user/usecoupon2',{num:this.num,token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        this.$message.error("请重新登录！");
+                        this.$router.push('/login')
+                    }
                     if(res.data.sta == 1) {
-                        this.pass = true;
-                        this.resData = res.data.data;
+                        this.pass = false;
+                        this.num = '';
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'success'
+                        });
                     }else {
                         this.$message.error(res.data.msg);
                     }

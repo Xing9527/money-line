@@ -11,36 +11,46 @@
                     <div class="row">
                         <div class="col-lg-6 cold--md-6 col-sm-12">
                             <el-form-item label="姓名" prop="name">
-                                <el-input placeholder="请输入姓名" v-model="ruleForm.faren"></el-input>
+                                <el-input placeholder="请输入姓名" v-model="ruleForm.name"></el-input>
                             </el-form-item>
                         </div>
                         <div class="col-lg-5 cold--md-5 col-sm-12">
-                            <el-form-item label="手机号" prop="phone">
+                            <el-form-item label="手机号" prop="tel">
                                 <el-input placeholder="请输入手机号码" v-model="ruleForm.tel"></el-input>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-6 cold--md-6 col-sm-12">
-                            <el-form-item label="微信" prop="name">
+                            <el-form-item label="微信" prop="weixin">
                                 <el-input placeholder="请输入微信" v-model="ruleForm.weixin"></el-input>
                             </el-form-item>
                         </div>
                         <div class="col-lg-5 cold--md-5 col-sm-12">
-                            <el-form-item label="邀请码" prop="phone">
+                            <el-form-item label="邀请码" prop="yaoqingma">
                                 <el-input placeholder="请输入邀请码" v-model="ruleForm.yaoqingma"></el-input>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-lg-6 cold--md-6 col-sm-12">
+                            <el-form-item label="推广码" prop="tuiguangma">
+                                <el-input placeholder="请输入推广码" v-model="ruleForm.tuiguangma"></el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="col-lg-5 cold--md-5 col-sm-12">
+                            <p style="margin-left: 20px;">（如果无推广码，可填写通用推广码cfl12345）</p>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-12 cold--md-12 col-sm-12">
                             <el-form-item label="邮箱" prop="email">
-                                <el-input placeholder="请输入邮箱" v-model="ruleForm.yingyeaddress"></el-input>
+                                <el-input placeholder="请输入邮箱" v-model="ruleForm.email"></el-input>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="haxi">
-                        <p>接收奖励TITT地址</p>
+                        <p>接收奖励TITT账户地址</p>
                         <el-form-item label="" prop="link" style="margin-left: -12px;">
                             <el-input placeholder="请输入接收奖励TITT地址" v-model="ruleForm.link"></el-input>
                         </el-form-item>
@@ -121,13 +131,6 @@
         data() {
             return {
                 ruleForm:{},
-                name:'20190403第一抵押分红活动',
-                date:['2019-05-06','2020-03-06'],
-                diyaqixian:'6',
-                yuejiangli:'12',
-                nianjiangli:'8',
-                yuejiesuo:'12',
-                nianjiesuo:'8',
                 rules: {
                     name: [
                         { required: true, message : '请输入姓名', trigger: 'blur' }
@@ -138,8 +141,8 @@
                     weixin: [
                         { required: true, message: '请输入微信号', trigger: 'blur' },
                     ],
-                    yaoqingma: [
-                        { required: true, message: '请输入您的邀请码', trigger: 'blur' },
+                    tuiguangma: [
+                        { required: true, message: '请输入您的推广码', trigger: 'blur' },
                     ],
                     email: [
                         { required: true, message: '请输入邮箱地址', trigger: 'blur' },
@@ -186,7 +189,12 @@
                             params.card2 = this.img3
                             params.erweima = this.img1;
                             params.card1 = this.img2;
+                            params.token = sessionStorage.getItem('token');
                             this.$axios.post('user/zhiyuanzhe',params).then(res => {
+                                if(res.data.sta == 401) {
+                                    this.$message.error("请重新登录！");
+                                    this.$router.push('/login')
+                                }
                                 if(res.data.sta == 1) {
                                     this.$message({
                                         message: '提交成功！',

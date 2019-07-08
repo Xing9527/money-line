@@ -34,6 +34,10 @@ let xhr = {
             instance.post(trueURL, Qs.stringify(params)).then(res => {
                 resolve(res)
             }).catch(err => {
+                if(res.data.sta == 401) {
+                    this.$message.error("请重新登录！");
+                    this.$router.push('/login')
+                }
                 reject(err)
             })
         })

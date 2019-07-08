@@ -3,6 +3,7 @@
         <img src="../assets/images/qiyehezuo.jpg" style="width: 100%;" alt=""/>
         <div class="apply">
             <h3>企业合作申请表</h3>
+            <p style="margin: 0px auto 20px;text-align: center;color: #f07e1b;">（如需提交申请，请先注册登录）</p>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm" style="width: 90%;margin: 0 auto;">
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="ruleForm.name" style="max-width: 300px" placeholder="请输入您的姓名"></el-input>
@@ -26,7 +27,16 @@
                     <el-input v-model="ruleForm.zuoji" style="max-width: 300px;" placeholder="请输入您的公司座机"></el-input>
                 </el-form-item>
                 <el-form-item label="意向合作领域" prop="lingyu">
-                    <el-input v-model="ruleForm.lingyu" style="max-width: 300px;" placeholder="请输入您的意向合作领域"></el-input>
+                    <el-checkbox-group v-model="ruleForm.lingyu">
+                        <el-checkbox label="超级节点" value="超级节点"></el-checkbox>
+                        <el-checkbox label="电子商城" value="电子商城"></el-checkbox>
+                        <el-checkbox label="合作供货" value="合作供货"></el-checkbox>
+                        <el-checkbox label="DAPP开发合作" value="DAPP开发合作"></el-checkbox>
+                        <el-checkbox label="去中心化交易所" value="去中心化交易所"></el-checkbox>
+                        <el-checkbox label="托管中心" value="托管中心"></el-checkbox>
+                        <el-checkbox label="备选节点" value="备选节点"></el-checkbox>
+                        <el-checkbox label="其他合作" value="其他合作"></el-checkbox>
+                    </el-checkbox-group>
                 </el-form-item>
             </el-form>
             <div class="upload clear">
@@ -92,21 +102,17 @@
                         { pattern: /^\d{1,}$/, message: '请输入正确格式', trigger: 'blur' }
                     ],
                     lingyu: [
-                        { required: true, message: '请输入您的意向合作领域', trigger: 'blur' }
+                        { required: true, message: '请选择您的意向合作领域', trigger: 'change' }
                     ],
                 },
-                ruleForm:{},
+                ruleForm:{
+                    lingyu:[]
+                },
                 imgList:[]
             }
         },
         mounted() {
-            if(!sessionStorage.getItem('user')) {
-                this.$message({
-                    message: '请先登录！',
-                    type: 'info'
-                });
-                this.$router.push('/login')
-            }
+
         },
         methods: {
             handleAvatarSuccess(res, file) {
@@ -120,6 +126,14 @@
                 return isLt5M;
             },
             subData() {
+                if(!sessionStorage.getItem('user')) {
+                    this.$message({
+                        message: '请先登录！',
+                        type: 'info'
+                    });
+                    this.$router.push('/login')
+                    return
+                }
                 this.$refs['ruleForm'].validate((valid) => {
                     if (valid) {
                         if(this.imgList.length == 0) {
@@ -130,7 +144,13 @@
                         }else {
                             var params = {...this.ruleForm};
                             params.pics = this.imgList;
+                            params.lingyu = params.lingyu.join(',');
+                            params.token = sessionStorage.getItem('token');
                             this.$axios.post('user/qiyehezuo',params).then(res => {
+                                if(res.data.sta == 401) {
+                                    this.$message.error("请重新登录！");
+                                    this.$router.push('/login')
+                                }
                                 if(res.data.sta == 1) {
                                     this.$message({
                                         message: '提交成功！',
@@ -168,7 +188,7 @@
         h3 {
             font-size: 30px;
             color: #303133;
-            margin-bottom: 60px;
+            margin-bottom: 20px;
             text-align: center;
         }
         .upload {

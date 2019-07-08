@@ -20,36 +20,36 @@
                 <ul class="up-data">
                     <li>
                         <span>总的发行量数据</span>
-                        <span>99999.9999</span>
+                        <span>10000000000</span>
                     </li>
                     <li>
                         <span>底仓储备仓数据</span>
-                        <span>99999.9999</span>
+                        <span>{{info1.dicangchubei}}</span>
                     </li>
                     <li>
                         <span>总流通盘数据</span>
-                        <span>99999.9999</span>
+                        <span>4000000000</span>
                     </li>
                     <li>
                         <span>总储备仓数据</span>
-                        <span>99999.9999</span>
+                        <span>{{info1.zongchubei}}</span>
                     </li>
                     <li>
                         <span>抵押储备仓数据</span>
-                        <span>99999.9999</span>
+                        <span>{{info1.diyachubei}}</span>
                     </li>
                     <li>
                         <span>当前流通盘数据</span>
-                        <span>99999.9999</span>
+                        <span>{{info1.dangqianliutong}}</span>
                     </li>
                     <li>
                         <span>CW=</span>
-                        <span>10.01%</span>
+                        <span>0.02-2%</span>
                     </li>
                 </ul>
             </div>
             <div class="left-bottom">
-                <h5>公告</h5>
+                <h5 style="cursor: pointer" @click="$router.push('/noticeList')">公告</h5>
                 <p v-for="item in noticeList" :key="item.id" @click="$router.push({path:'/noticeDetail',query:{id:item.id}})">{{item.title}}</p>
             </div>
         </div>
@@ -58,10 +58,10 @@
                 <div class="col-lg-8 col-md-6 col-sm-12">
                     <div class="bancor">
                         <div class="ban-left">
-                            <h5>bancor</h5>
+                            <h5>TITT/USDT</h5>
                             <div class="usd">
                                 <p>0.9999</p>
-                                <p>≈0.99USD</p>
+                                <p>≈0.99</p>
                             </div>
                             <span class="green-num">-9.99%</span>
                         </div>
@@ -69,11 +69,11 @@
                             <div>
                                 <p>
                                     <span>高</span>
-                                    <span>0.9999</span>
+                                    <span>{{info.max}}</span>
                                 </p>
                                 <p>
                                     <span>低</span>
-                                    <span>0.9999</span>
+                                    <span>{{info.min}}</span>
                                 </p>
                             </div>
                             <div>
@@ -91,10 +91,11 @@
                     <div class="echarts" v-loading="loading">
                         <div id="line" style="height: 300px;"></div>
                         <div class="times">
-                            <span @click="times='120'" :style="times=='120'?'color:#f07e1b':''">120m</span>
-                            <span @click="times='72'" :style="times=='72'?'color:#f07e1b':''">72H</span>
-                            <span @click="times='31'" :style="times=='31'?'color:#f07e1b':''">31D</span>
-                            <span @click="times='12'" :style="times=='12'?'color:#f07e1b':''">12M</span>
+                            <span @click="times='60'" :style="times=='60'?'color:#f07e1b':''">60m</span>
+                            <span @click="times='24'" :style="times=='24'?'color:#f07e1b':''">24H</span>
+                            <span @click="times='7'" :style="times=='7'?'color:#f07e1b':''">7D</span>
+                            <span @click="times='1'" :style="times=='1'?'color:#f07e1b':''">1M</span>
+                            <span @click="times='12'" :style="times=='1'?'color:#f07e1b':''">12M</span>
                         </div>
                         <div id="bar" style="height: 100px;"></div>
                     </div>
@@ -105,7 +106,7 @@
                             <h5>链上买卖记录</h5>
                             <el-row class="buy-title">
                                 <el-col :span="6">时间</el-col>
-                                <el-col :span="6">买/卖(EOS)</el-col>
+                                <el-col :span="6">买/卖</el-col>
                                 <el-col :span="6">数量(EOS)</el-col>
                                 <el-col :span="6">TxID</el-col>
                             </el-row>
@@ -129,43 +130,36 @@
                         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                             <div class="change-left">
                                 <h5>置换TITT</h5>
-                                <p>TITT可用 <span>99</span></p>
-                                <div style="margin: 10px 0;">
+                                <div style="margin: 35px 0 23px;">
                                     <el-input style="width: 220px;" v-model="tittNum" placeholder="输入想置换的TITT数量"></el-input>
                                     <span style="color: #999;">TITT</span>
                                 </div>
-                                <p>≈0.9Kib</p>
-                                <el-progress :text-inside="true" :stroke-width="16" :percentage="tittProgress" status="success"
-                                             style="margin: 10px 0;"></el-progress>
                                 <el-button type="success" style="width: 100%;" @click="convert('titt')">置换TITT</el-button>
-                                <span class="buy-nums">最小交易值0.1</span>
+                                <span class="buy-nums">最小交易值10TTTT</span>
                             </div>
                         </el-col>
                         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                             <div class="change-left">
                                 <h5>置换EOS</h5>
-                                <p>EOS可用 <span>99</span> Kib</p>
-                                <div style="margin: 10px 0;">
+                                <div style="margin: 35px 0 23px;">
                                     <el-input style="width: 220px;" v-model="eosNum" placeholder="输入想置换的EOS数量"></el-input>
                                     <span style="color: #999;">EOS</span>
                                 </div>
-                                <p>≈0.9EOS</p>
-                                <el-progress :text-inside="true" :stroke-width="16" :percentage="eosProgress" status="exception" style="margin: 10px 0;"></el-progress>
                                 <el-button type="danger" style="width: 100%;" @click="convert('eos')">置换EOS</el-button>
-                                <span class="buy-nums">最小交易值0.1</span>
+                                <span class="buy-nums">最小交易值0.05EOS</span>
                             </div>
                         </el-col>
                     </el-row>
                 </div>
                 <div class="router-two col-lg-4 col-md-6 col-sm-12">
-                    <router-link to="myWallet" class="router-item">
+                    <router-link to="/myWallet" class="router-item">
                         <img src="../assets/images/qianbao.png" alt=""/>
                         <span>我的钱包</span>
                     </router-link>
-                    <div class="router-item"  @click="$alert('功能暂未开放，敬请期待！')">
+                    <a href="https://eospark.com/account/tittbancor14" target="_blank" class="router-item">
                         <img src="../assets/images/liulanqi.png" alt=""/>
                         <span>区块链浏览器</span>
-                    </div>
+                    </a>
                 </div>
             </div>
             <div class="right-bottom">
@@ -221,35 +215,18 @@
 
                 ],
                 changeShowList:[],
-                times:'72',
+                times:'120',
                 chartData:{
                     data:[],
-                    time:[]
+                    time:[],
+                    num:[]
                 },
-                noticeList:[]
+                noticeList:[],
+                info:{},
+                info1:{},
             }
         },
         watch: {
-            tittNum(val) {
-                var step = val/99*100;
-                if(step<=0) {
-                    this.tittProgress = 0;
-                }else if(step>=99) {
-                    this.tittProgress = 100;
-                }else {
-                    this.tittProgress = parseInt(step);
-                }
-            },
-            eosNum(val) {
-                var step = val/99*100;
-                if(step<=0) {
-                    this.eosProgress = 0;
-                }else if(step>=99) {
-                    this.eosProgress = 100;
-                }else {
-                    this.eosProgress = parseInt(step);
-                }
-            },
             times(val) {
                 this.getChartData()
             }
@@ -258,9 +235,25 @@
             this.getChartData();
             this.getWeekList();
             this.getLineList();
-            this.getNoticeList()
+            this.getNoticeList();
+            this.getChangeInfo();
+            this.getChangeInfo1();
         },
         methods: {
+            getChangeInfo() {
+                this.$axios.get('displace/total').then(res => {
+                    if(res.data.sta == 1) {
+                        this.info = res.data.data;
+                    }
+                })
+            },
+            getChangeInfo1() {
+                this.$axios.get('displace/total2').then(res => {
+                    if(res.data.sta == 1) {
+                        this.info1 = res.data.data;
+                    }
+                })
+            },
             convert(type) {
                 if(!sessionStorage.getItem('user')) {
                     this.$message({
@@ -272,7 +265,7 @@
                 }
 
                 if(type == 'titt') {
-                    if(this.tittNum.trim() && this.tittNum >= 0.1) {
+                    if(this.tittNum.trim() && this.tittNum >= 10) {
                         if(isNaN(this.tittNum)) {
                             alert('请输入数字！');
                             return false;
@@ -280,7 +273,7 @@
                         this.$router.push({path:'/changeSure',query:{titt:this.tittNum,eos:(this.tittNum/200).toFixed(2),fangxiang:false}})
                     }
                 }else {
-                    if(this.eosNum.trim() && this.eosNum >= 0.1) {
+                    if(this.eosNum.trim() && this.eosNum >= 0.05) {
                         if(isNaN(this.eosNum)) {
                             alert('请输入数字！');
                             return false;
@@ -292,11 +285,13 @@
             getChartData() {
                 this.loading = true;
                 this.$axios.get('displace/echars',{ time:this.times }).then(res => {
-                    this.loading = false
-                    this.chartData.data = res.data.data.price.data;
-                    this.chartData.time = res.data.data.xAxis.data;
-                    this.lineChart();
-                    this.barChart();
+                    this.loading = false;
+                    if(res.data.sta == 1) {
+                        this.chartData.data = res.data.data.price.data;
+                        this.chartData.time = res.data.data.xAxis.data;
+                        this.lineChart();
+                        this.barChart();
+                    }
                 })
             },
             lineChart() {
@@ -422,14 +417,24 @@
                 barChart.setOption(option);
             },
             getWeekList() {
-                this.$axios.get('displace/getrecordweek',{type:1}).then(res => {
+                this.$axios.get('displace/getrecordweek',{type:1,token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
                     if(res.data.data) {
                         this.changeList = res.data.data.list;
                     }
                 })
             },
             getLineList() {
-                this.$axios.get('displace/getrecord').then(res => {
+                this.$axios.get('displace/getrecord',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
                     if(res.data) {
                         this.recardList = res.data.lianshangjilu;
                         this.jiaoyidui = res.data.jiaoyidui;
@@ -439,7 +444,7 @@
             getNoticeList() {
                 this.$axios.get('index/gonggao').then(res => {
                     if(res.data.data) {
-                        this.noticeList = res.data.data.list
+                        this.noticeList = res.data.data.list.slice(0,4)
                     }
                 })
             }
@@ -642,7 +647,7 @@
                         }
                     }
                     .buy-nums {
-                        margin-top: 5px;
+                        margin: 13px 0;
                         display: block;
                         font-size: 12px;
                         color: #f00;
@@ -653,7 +658,7 @@
                     margin-top: 20px;
                     .router-item {
                         display: block;
-                        padding: 36px;
+                        padding: 25px 36px;
                         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.16);
                         &:last-of-type {
                             margin-top: 12px;

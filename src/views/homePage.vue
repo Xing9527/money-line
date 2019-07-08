@@ -60,7 +60,7 @@
                                                     </el-select>
                                                 </div>
                                             </div>
-                                            <el-input v-model="ConvertData.eosValue" style="float: left;width: 48%;margin-top: 5px;" @blur="computed" @keyup.enter.native="computed"
+                                            <el-input v-model="ConvertData.eosValue" style="float: left;width: 45%;margin-top: 5px;" @blur="computed" @keyup.enter.native="computed"
                                                     placeholder="输入数量"></el-input>
                                         </el-col>
                                         <el-col :span="1" style="text-align: center;cursor: pointer;" class="col-lg-1 col-md-1 col-sm-1">
@@ -96,7 +96,7 @@
                                                     </el-select>
                                                 </div>
                                             </div>
-                                            <el-input v-model="ConvertData.tittValue" style="float: left;width: 48%;margin-top: 5px;" @blur="computed" @keyup.enter.native="computed" placeholder="输入数量"></el-input>
+                                            <el-input v-model="ConvertData.tittValue" style="float: left;width: 4%;margin-top: 5px;" @blur="computed" @keyup.enter.native="computed" placeholder="输入数量"></el-input>
                                         </el-col>
                                         <el-col :span="1" style="text-align: center;cursor: pointer;" class="col-lg-1 col-md-1 col-sm-1">
                                             <i class="iconfont icon-change"  @click="changeTwo"
@@ -130,7 +130,7 @@
         </header>
 
         <!--公告-->
-        <div class="news clear">
+        <div class="news clear" v-if="noticeList.length != 0">
             <i class="iconfont icon-laba"></i>
             <div class="swiper-container" v-swiperText>
                 <p v-for="item in noticeList" :key="item.id" @click="$router.push({path:'/noticeDetail',query:{id:item.id}})">{{item.title}}</p>
@@ -698,7 +698,11 @@
             getNoticeList() {
                 this.$axios.get('index/gonggao').then(res => {
                     if(res.data.data) {
-                        this.noticeList = res.data.data.list
+                        if(res.data.data.list.length < 5) {
+                            this.noticeList = res.data.data.list;
+                        }else {
+                            this.noticeList = res.data.data.list.slice(0,4);
+                        }
                     }
                 })
             },

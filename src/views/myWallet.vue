@@ -41,6 +41,12 @@
                 </div>
             </div>
         </div>
+        <div class="info">
+            <p>1.用户参与置换，只能用Itoken钱包和TP钱包的EOS账户。不能使用币威钱包。</p>
+            <p>2.币威钱包只能用于收发红包，或者对TITT进行转账收款。</p>
+            <p>3.用户使用第三方钱包参与TITT和EOS置换，请务必再三核对置换转账的智能合约账户<span style="color: #000;font-weight: 700">tittbancor14</span>，和转账EOS或TITT账户地址信息。如果出现账户地址错误，一旦完成转账不可撤销。</p>
+            <p>4.使用币威钱包转账TITT，暂时有0.01EOS的手续费。</p>
+        </div>
     </div>
 </template>
 
@@ -88,6 +94,12 @@
                     margin-top: 10px;
                 }
             }
+        }
+        .info {
+            padding-top: 20px;
+            margin: 30px auto;
+            border-top: 2px solid #f07e1b;
+            width: 75%;
         }
     }
 </style>

@@ -27,7 +27,7 @@ Vue.filter('zhangfu',function(val) {
 
 Vue.filter('price',function(val) {
     if(val) {
-        return val.toFixed(3)
+        return (val*1).toFixed(3)
     }else {
         return '--'
     }

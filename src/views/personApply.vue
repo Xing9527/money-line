@@ -6,17 +6,13 @@
         </div>
         <div class="list">
             <h4>个人抵押TITT申请表</h4>
+            <p style="margin: 0px auto 20px;text-align: center;color: #f07e1b;">（如需提交申请，请先注册登录）</p>
             <div class="form">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
                     <div class="row">
                         <div class="col-lg-6 cold--md-6 col-sm-12">
                             <el-form-item label="活动名称">
                                 <el-input placeholder="请输入活动名称" v-model="name" :disabled="true"></el-input>
-                            </el-form-item>
-                        </div>
-                        <div class="col-lg-5 cold--md-5 col-sm-12">
-                            <el-form-item label="活动文件">
-                                <el-button type="primary" plain>点击下载</el-button>
                             </el-form-item>
                         </div>
                     </div>
@@ -173,7 +169,7 @@
                     <p class="rule">
                         <el-checkbox v-model="checked"></el-checkbox>
                         我已阅读并同意
-                        <router-link to="/divideAgreement?type=person">《抵押分红协议》</router-link>
+                        <router-link to="/divideAgreement?type=person" target="_blank">《个人用户抵押分红文件》</router-link>
                     </p>
                     <div style="text-align: center;margin-top: 30px;">
                         <el-button type="primary" style="width: 220px;" @click="subApply">提交申请</el-button>
@@ -269,6 +265,14 @@
                 return isLt5M;
             },
             subApply() {
+                if(!sessionStorage.getItem('user')) {
+                    this.$message({
+                        message: '请先登录！',
+                        error: 'info'
+                    });
+                    this.$router.push('/login');
+                    return false
+                }
                 if(!this.checked) {
                     this.$message({
                         message: '请阅读抵押协议并同意！',
@@ -290,7 +294,12 @@
                                 params.canyuerweima = this.img1;
                                 params.jiaoyihaojietu = this.img2;
                                 params.f = 1;
+                                params.token = sessionStorage.getItem('token');
                                 this.$axios.post('Huodong/setHuoDong',params).then(res => {
+                                    if(res.data.sta == 401) {
+                                        this.$message.error("请重新登录！");
+                                        this.$router.push('/login')
+                                    }
                                     if(res.data.sta == 1) {
                                         this.$message({
                                             message: '提交成功！',
@@ -338,7 +347,7 @@
             box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.16);
             border-radius: 3px;
             h4 {
-                margin: 40px 0 60px;
+                margin: 40px 0 20px;
                 font-size: 30px;
                 color: #303133;
                 text-align: center;

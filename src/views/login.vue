@@ -30,7 +30,8 @@
             }
         },
         mounted() {
-
+            sessionStorage.removeItem('user');
+            sessionStorage.removeItem('token')
         },
         methods: {
             subLogin() {
@@ -50,6 +51,7 @@
                                 type: 'success'
                             });
                             sessionStorage.setItem('user',JSON.stringify(res.data.user))
+                            sessionStorage.setItem('token',res.data.user.token)
                             setTimeout(() => {
                                 this.$router.push('/homePage')
                             },200)

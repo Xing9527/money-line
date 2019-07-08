@@ -3,7 +3,7 @@
         <img src="../assets/images/login_bg.jpg" style="width: 100%;position: absolute;top: 55px;z-index: -1;" alt=""/>
         <div class="form">
             <div class="form-content">
-                <h3>注册即可获得50通证</h3>
+                <h3>注册即可获得{{honggu}}红股</h3>
                 <p class="title">邀请好友获得更多</p>
                 <div class="phone">
                     <el-input v-model="formData.eos" placeholder="请输入常用EOS账号作为您的用户名"></el-input>
@@ -15,7 +15,7 @@
                     <el-input v-model="formData.yaoqing" placeholder="请输入邀请码（可选）"></el-input>
                 </div>
                 <div style="margin-bottom: 10px;">
-                    <el-input v-model="formData.payPwd" placeholder="请设定您的交易密码，至少6位数字" show-password></el-input>
+                    <el-input v-model="formData.payPwd" placeholder="请设定您的资金密码，至少6位数字" show-password></el-input>
                 </div>
                 <div style="margin-bottom: 10px;">
                     <el-input v-model="formData.email" placeholder="请输入常用Email地址"></el-input>
@@ -23,9 +23,9 @@
                 <p class="rule">
                     <el-checkbox v-model="checked"></el-checkbox>
                     我已阅读并同意
-                    <router-link to="/userRules">《用户注册协议》</router-link>
+                    <router-link to="/userRules" target="_blank">《用户注册协议》</router-link>
                 </p>
-                <el-button type="primary" style="width: 100%;margin: 10px 0 0;" @click="register">GO!领取50通证</el-button>
+                <el-button type="primary" style="width: 100%;margin: 10px 0 0;" @click="register">GO!领取{{honggu}}红股</el-button>
                 <router-link to="/login" class="forget">已有财富链账号？去登录</router-link>
             </div>
         </div>
@@ -41,13 +41,19 @@ import axios from 'axios'
                 formData:{
 
                 },
-                checked:true
+                checked:true,
+                honggu:''
             }
         },
         mounted() {
-
+            this.getHonggu()
         },
         methods: {
+            getHonggu() {
+                this.$axios.get('tourist/get_hg').then(res => {
+                    this.honggu = res.data.注册新用户奖励;
+                })
+            },
             register() {
                 if(!this.checked) {
                     this.$message({
@@ -63,8 +69,8 @@ import axios from 'axios'
                     this.$message.error('输入的EOS账号格式不正确！');
                 }else if(!this.formData.pwd || this.formData.pwd.length < 8) {
                     this.$message.error('请输入正确的登录密码格式！');
-                }else if(reg.test(this.formData.payPwd)) {
-                    this.$message.error('请输入正确的交易密码格式！');
+                }else if(!reg.test(this.formData.payPwd)) {
+                    this.$message.error('请输入正确的资金密码格式！');
                 }else if(!this.formData.email){
                     this.$message.error('请输入常用邮箱地址！');
                 }else {
