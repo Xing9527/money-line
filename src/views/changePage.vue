@@ -79,7 +79,7 @@
                             <div>
                                 <p>
                                     <span>今开</span>
-                                    <span>0.9999</span>
+                                    <span>{{info.current}}</span>
                                 </p>
                                 <p>
                                     <span>昨收</span>
@@ -215,7 +215,7 @@
 
                 ],
                 changeShowList:[],
-                times:'120',
+                times:'24',
                 chartData:{
                     data:[],
                     time:[],
@@ -289,6 +289,7 @@
                     if(res.data.sta == 1) {
                         this.chartData.data = res.data.data.price.data;
                         this.chartData.time = res.data.data.xAxis.data;
+                        this.chartData.num = res.data.data.titt.data;
                         this.lineChart();
                         this.barChart();
                     }
@@ -302,8 +303,8 @@
                         trigger: 'axis'
                     },
                     grid: {
-                        left: '3%',
-                        right: '4%',
+                        left: '6%',
+                        right: '7%',
                         bottom: '2%',
                         containLabel: true
                     },
@@ -330,7 +331,10 @@
                         },
                         axisTick: {
                             show: false
-                        }
+                        },
+                        axisLabel: {
+                            show: false
+                        },
                     },
                     series: [
                         {
@@ -368,8 +372,8 @@
                         trigger: 'axis'
                     },
                     grid: {
-                        left: '3%',
-                        right: '6%',
+                        left: '6%',
+                        right: '7%',
                         bottom: '3%',
                         top: '-1%',
                         containLabel: true
@@ -384,11 +388,11 @@
                         },
                         axisTick: {
                             show: false
-                        },
+                        }
                     },
                     yAxis: {
                         type: 'value',
-                        name: '价格',
+                        name: 'titt价格',
                         position: 'right',
                         axisLine:{
                             show: false,
@@ -397,19 +401,19 @@
                             show: false
                         },
                         axisLabel: {
-                            color: '#fff'
+                            show: false
                         },
 
                     },
                     series: [
                         {
-                            name:'价格',
+                            name:'titt成交量',
                             type:'bar',
-                            data:this.chartData.data,
+                            data:this.chartData.num,
                             itemStyle: {
                                 color: '#409eff'
                             },
-                            barWidth: '15px'
+                            barWidth: '5px'
                         }
                     ]
                 };
