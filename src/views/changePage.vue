@@ -95,7 +95,7 @@
                             <span @click="times='24'" :style="times=='24'?'color:#f07e1b':''">24H</span>
                             <span @click="times='7'" :style="times=='7'?'color:#f07e1b':''">7D</span>
                             <span @click="times='1'" :style="times=='1'?'color:#f07e1b':''">1M</span>
-                            <span @click="times='12'" :style="times=='1'?'color:#f07e1b':''">12M</span>
+                            <!--<span @click="times='12'" :style="times=='12'?'color:#f07e1b':''">12M</span>-->
                         </div>
                         <div id="bar" style="height: 100px;"></div>
                     </div>
@@ -198,6 +198,7 @@
 </template>
 
 <script>
+    import router from '../router/index'
     import echarts from 'echarts'
     export default {
         name: "change",
@@ -224,6 +225,8 @@
                 noticeList:[],
                 info:{},
                 info1:{},
+                min:10000,
+                interval:''
             }
         },
         watch: {
@@ -238,6 +241,16 @@
             this.getNoticeList();
             this.getChangeInfo();
             this.getChangeInfo1();
+            var interval = setInterval(() => {
+                this.getChartData('timer')
+            },5000)
+
+            router.beforeEach((to,from,next) => {
+                if(from.path == '/changePage') {
+                    clearInterval(interval)
+                }
+                next()
+            })
         },
         methods: {
             getChangeInfo() {
@@ -282,14 +295,54 @@
                     }
                 }
             },
-            getChartData() {
-                this.loading = true;
+            timestampToTime(timestamp) {
+                function add0(m){return m<10?'0'+m:m };
+                var time = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var y = time.getFullYear();
+                var m = time.getMonth()+1;
+                var d = time.getDate();
+                var h = time.getHours();
+                var mm = time.getMinutes();
+                var s = time.getSeconds();
+
+                if(this.times == '60') {
+                    return `${add0(h)}:${add0(mm)}`
+                }else if(this.times == '7' || this.times == '24') {
+                    return `${add0(h)}:${add0(mm)}\n${add0(m)}/${add0(d)}`
+                }else {
+                    return `${add0(h)}:${add0(mm)}\n${add0(y)}/${add0(m)}/${add0(d)}`
+                }
+            },
+            getChartData(val) {
+                if(!val) {
+                    this.loading = true;
+                }
                 this.$axios.get('displace/echars',{ time:this.times }).then(res => {
                     this.loading = false;
                     if(res.data.sta == 1) {
                         this.chartData.data = res.data.data.price.data;
-                        this.chartData.time = res.data.data.xAxis.data;
+                        if(res.data.data.price.data) {
+                            res.data.data.price.data.forEach(item => {
+                                if(this.min>item) {
+                                    this.min = item
+                                }
+                            })
+                        }
+                        this.chartData.time = [];
+                        if(res.data.data.xAxis.data) {
+                            res.data.data.xAxis.data.forEach(item => {
+                                this.chartData.time.push(this.timestampToTime(item))
+                            })
+                        }
                         this.chartData.num = res.data.data.titt.data;
+                        this.lineChart();
+                        this.barChart();
+                    }else {
+                        this.chartData = {
+                            data:[],
+                            num:[],
+                            time:[]
+                        }
                         this.lineChart();
                         this.barChart();
                     }
@@ -326,6 +379,7 @@
                         type: 'value',
                         name: '价格',
                         position: 'right',
+                        min: this.min - 0.0001,
                         axisLine:{
                             show: false,
                         },
@@ -345,7 +399,7 @@
                                 normal: {
                                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                                         offset: 0,
-                                        color: '#409eff'
+                                        color: 'rgba(64,158,255,.5)'
                                     }, {
                                         offset: 1,
                                         color: '#fff'
@@ -354,11 +408,11 @@
                             },
                             lineStyle: {
                                 color: '#409eff',
-                                width: 5
+                                width: 2
                             },
                             itemStyle: {
                                 color: '#409eff',
-                                borderWidth: 2
+                                borderWidth: 1
                             }
                         }
                     ]
