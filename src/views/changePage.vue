@@ -60,10 +60,10 @@
                         <div class="ban-left">
                             <h5>TITT/USDT</h5>
                             <div class="usd">
-                                <p>0.9999</p>
-                                <p>≈0.99</p>
+                                <p>{{info.top_equal}}</p>
+                                <p>≈{{info.top_yequal}}</p>
                             </div>
-                            <span class="green-num">-9.99%</span>
+                            <span class="green-num">{{info.top_gain}}</span>
                         </div>
                         <div class="ban-right">
                             <div>
@@ -79,11 +79,11 @@
                             <div>
                                 <p>
                                     <span>今开</span>
-                                    <span>{{info.current}}</span>
+                                    <span>{{info.jinkai}}</span>
                                 </p>
                                 <p>
                                     <span>昨收</span>
-                                    <span>0.9999</span>
+                                    <span>{{info.zuoshou}}</span>
                                 </p>
                             </div>
                         </div>
@@ -118,7 +118,9 @@
                                     {{item.fangxiang}}
                                 </el-col>
                                 <el-col :span="6">{{item.eos}}</el-col>
-                                <el-col :span="6" style="color: #f07e1b;">{{item.trx_id | sixLength}}</el-col>
+                                <el-col :span="6">
+                                    <p style="color: #f07e1b;cursor: pointer;font-size: 12px" @click="checkDetail(item.trx_id)">{{item.trx_id | sixLength}}</p>
+                                </el-col>
                             </el-row>
                         </div>
                     </div>
@@ -130,23 +132,25 @@
                         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                             <div class="change-left">
                                 <h5>置换TITT</h5>
-                                <div style="margin: 35px 0 23px;">
-                                    <el-input style="width: 220px;" v-model="tittNum" placeholder="输入想置换的TITT数量"></el-input>
-                                    <span style="color: #999;">TITT</span>
+                                <div style="margin: 25px 0 5px;">
+                                    <el-input style="width: 220px;" v-model="tittNum" placeholder="输入想置换的EOS数量"></el-input>
+                                    <span style="color: #999;">EOS</span>
                                 </div>
+                                <p>≈{{titt}}titt</p>
                                 <el-button type="success" style="width: 100%;" @click="convert('titt')">置换TITT</el-button>
-                                <span class="buy-nums">最小交易值10TTTT</span>
+                                <span class="buy-nums">最小交易值0.05EOS</span>
                             </div>
                         </el-col>
                         <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                             <div class="change-left">
                                 <h5>置换EOS</h5>
-                                <div style="margin: 35px 0 23px;">
-                                    <el-input style="width: 220px;" v-model="eosNum" placeholder="输入想置换的EOS数量"></el-input>
-                                    <span style="color: #999;">EOS</span>
+                                <div style="margin: 25px 0 5px;">
+                                    <el-input style="width: 220px;" v-model="eosNum" placeholder="输入想置换的TITT数量"></el-input>
+                                    <span style="color: #999;">TITT</span>
                                 </div>
+                                <p>≈{{eos}}eos</p>
                                 <el-button type="danger" style="width: 100%;" @click="convert('eos')">置换EOS</el-button>
-                                <span class="buy-nums">最小交易值0.05EOS</span>
+                                <span class="buy-nums">最小交易值10TTTT</span>
                             </div>
                         </el-col>
                     </el-row>
@@ -166,7 +170,7 @@
                 <div class="changer-recard-title clear">
                     <div style="float: left;">
                         <h5>最近一周的置换记录</h5>
-                        <p>EOS系统将收取0.5%的手续费</p>
+                        <!--<p>EOS系统将收取0.5%的手续费</p>-->
                     </div>
                     <span @click="$router.push('/changeList')">查看全部</span>
                 </div>
@@ -189,7 +193,9 @@
                         <el-col :span="3">{{item.titt}}</el-col>
                         <el-col :span="3">{{item.eos}}</el-col>
                         <el-col :span="3">{{item.status}}</el-col>
-                        <el-col :span="3" style="color: #f07e1b;">{{item.trx_id | sixLength}}</el-col>
+                        <el-col :span="3">
+                            <p style="color: #f07e1b;cursor: pointer;font-size: 12px" @click="checkDetail(item.trx_id)">{{item.trx_id | sixLength}}</p>
+                        </el-col>
                     </el-row>
                 </div>
             </div>
@@ -212,6 +218,8 @@
                 tittNum: '',
                 eosProgress: 0,
                 eosNum: '',
+                eos:'',
+                titt:'',
                 changeList:[
 
                 ],
@@ -226,12 +234,21 @@
                 info:{},
                 info1:{},
                 min:10000,
-                interval:''
+                interval:'',
+                precent:0.005
             }
         },
         watch: {
             times(val) {
                 this.getChartData()
+            },
+            tittNum(val) {
+                if(val) {
+                    this.titt = val/this.precent.toFixed(4);
+                }
+            },
+            eosNum(val) {
+                this.eos = val*this.precent;
             }
         },
         mounted() {
@@ -243,7 +260,7 @@
             this.getChangeInfo1();
             var interval = setInterval(() => {
                 this.getChartData('timer')
-            },5000)
+            },10000);
 
             router.beforeEach((to,from,next) => {
                 if(from.path == '/changePage') {
@@ -253,6 +270,10 @@
             })
         },
         methods: {
+            checkDetail(id) {
+                console.log(id)
+                window.open("https://eospark.com/tx/"+id,'_blank');
+            },
             getChangeInfo() {
                 this.$axios.get('displace/total').then(res => {
                     if(res.data.sta == 1) {
@@ -496,6 +517,7 @@
                     if(res.data) {
                         this.recardList = res.data.lianshangjilu;
                         this.jiaoyidui = res.data.jiaoyidui;
+                        this.precent = this.jiaoyidui[0].price;
                     }
                 })
             },
@@ -613,7 +635,7 @@
                         }
                     }
                     .ban-right {
-                        float: right;
+                        float: left;
                         p {
                             float: left;
                             color: #666;

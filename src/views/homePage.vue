@@ -96,7 +96,7 @@
                                                     </el-select>
                                                 </div>
                                             </div>
-                                            <el-input v-model="ConvertData.tittValue" style="float: left;width: 4%;margin-top: 5px;" @blur="computed" @keyup.enter.native="computed" placeholder="输入数量"></el-input>
+                                            <el-input v-model="ConvertData.tittValue" style="float: left;width: 45%;margin-top: 5px;" @blur="computed" @keyup.enter.native="computed" placeholder="输入数量"></el-input>
                                         </el-col>
                                         <el-col :span="1" style="text-align: center;cursor: pointer;" class="col-lg-1 col-md-1 col-sm-1">
                                             <i class="iconfont icon-change"  @click="changeTwo"
@@ -658,6 +658,7 @@
                 select2: 'TITT',
                 isChange:true,
                 noticeList:[],
+                precent:0.005
             }
         },
         mounted() {
@@ -668,7 +669,8 @@
             //   });
             // });
             window.addEventListener('scroll', this.handleScroll, true);
-            this.getNoticeList()
+            this.getNoticeList();
+            this.getLineList();
             // this.$nextTick(() => {
             //     this.init()
             // })
@@ -703,6 +705,13 @@
                         }else {
                             this.noticeList = res.data.data.list.slice(0,4);
                         }
+                    }
+                })
+            },
+            getLineList() {
+                this.$axios.get('displace/getrecord').then(res => {
+                    if(res.data) {
+                        this.precent = this.jiaoyidui[0].price;
                     }
                 })
             },
@@ -759,7 +768,7 @@
                             alert('请输入数字！');
                             return false;
                         }
-                        this.ConvertData.tittValue = (this.ConvertData.eosValue*200).toFixed(2)
+                        this.ConvertData.tittValue = (this.ConvertData.eosValue/this.precent).toFixed(2)
                     }
                 }else {
                     if(this.ConvertData.tittValue.trim()) {
@@ -767,7 +776,7 @@
                             alert('请输入数字！');
                             return false;
                         }
-                        this.ConvertData.eosValue = (this.ConvertData.tittValue/200).toFixed(2)
+                        this.ConvertData.eosValue = (this.ConvertData.tittValue*this.precent).toFixed(2)
                     }
                 }
             },

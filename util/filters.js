@@ -4,7 +4,6 @@ import Vue from 'vue'
 Vue.filter('timeTrans',function(val) {
     function add0(m){return m<10?'0'+m:m };
     if(val) {
-        console.log(val);
         var time = new Date(val*1000);
         var y = time.getFullYear();
         var m = time.getMonth()+1;
@@ -27,7 +26,7 @@ Vue.filter('zhangfu',function(val) {
 
 Vue.filter('price',function(val) {
     if(val) {
-        return (val*1).toFixed(3)
+        return (val*1).toFixed(4)
     }else {
         return '--'
     }

@@ -69,7 +69,12 @@
                 this.getWeekList()
             },
             getWeekList() {
-                this.$axios.get('displace/getrecordweek',{type:2}).then(res => {
+                this.$axios.get('displace/getrecordweek',{type:2,token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
                     if(res.data.data) {
                         this.changeList = res.data.data.list;
                         // this.total = res.data.data.totalPage;

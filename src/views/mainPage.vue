@@ -75,7 +75,7 @@
             <a href="mailto:fortunechain008@gmail.com">
               <i class="lni-envelope"></i>
               <p>电子邮箱</p>
-              <p class="small">http://www.fortunechain.one</p>
+              <p class="small">fortunechain008@gmail.com</p>
             </a>
           </li>
           <li>
