@@ -41,17 +41,19 @@
             </el-form>
             <div class="upload clear">
                 <div class="upload-img">
-                    <p>公司大门及门头照片</p>
-                    <img class="img-list" v-for="(item,index) in imgList" :key="index" v-if="item" :src="item" alt=""/>
+                    <p>企业执照的照片</p>
                     <el-upload
                             class="avatar-uploader"
                             action="http://caifulian.mc8866.net/index/index/uploadimg"
                             :show-file-list="false"
-                            :on-success="handleAvatarSuccess"
+                            :on-success="handleAvatarSuccess1"
                             :before-upload="beforeAvatarUpload">
                         <div class="label">
-                            <i class="iconfont icon-jia"></i>
-                            <span>点击上传图片</span>
+                            <img v-if="ruleForm.qyzz" :src="ruleForm.qyzz" alt=""/>
+                            <p v-else>
+                                <i class="iconfont icon-jia"></i>
+                                <span>点击上传图片</span>
+                            </p>
                         </div>
                     </el-upload>
                 </div>
@@ -59,7 +61,106 @@
                     <div class="text">
                         <p>*可上传jpg、jpeg、png格式。</p>
                         <p>*照片容量不得超过5M.</p>
-                        <el-button @click="imgList=[]" size="small" style="margin-top: 10px;">清空已选图片</el-button>
+                    </div>
+                </div>
+            </div>
+            <div class="upload clear">
+                <div class="upload-img">
+                    <p>门头招牌的照片</p>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess2"
+                            :before-upload="beforeAvatarUpload">
+                        <div class="label">
+                            <img v-if="ruleForm.mtzp" :src="ruleForm.mtzp" alt=""/>
+                            <p v-else>
+                                <i class="iconfont icon-jia"></i>
+                                <span>点击上传图片</span>
+                            </p>
+                        </div>
+                    </el-upload>
+                </div>
+                <div class="upload-text">
+                    <div class="text">
+                        <p>*可上传jpg、jpeg、png格式。</p>
+                        <p>*照片容量不得超过5M.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="upload clear">
+                <div class="upload-img">
+                    <p>企业外景的照片</p>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess3"
+                            :before-upload="beforeAvatarUpload">
+                        <div class="label">
+                            <img v-if="ruleForm.qywj" :src="ruleForm.qywj" alt=""/>
+                            <p v-else>
+                                <i class="iconfont icon-jia"></i>
+                                <span>点击上传图片</span>
+                            </p>
+                        </div>
+                    </el-upload>
+                </div>
+                <div class="upload-text">
+                    <div class="text">
+                        <p>*可上传jpg、jpeg、png格式。</p>
+                        <p>*照片容量不得超过5M.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="upload clear">
+                <div class="upload-img">
+                    <p>企业内景的照片</p>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess4"
+                            :before-upload="beforeAvatarUpload">
+                        <div class="label">
+                            <img v-if="ruleForm.qynj" :src="ruleForm.qynj" alt=""/>
+                            <p v-else>
+                                <i class="iconfont icon-jia"></i>
+                                <span>点击上传图片</span>
+                            </p>
+                        </div>
+                    </el-upload>
+                </div>
+                <div class="upload-text">
+                    <div class="text">
+                        <p>*可上传jpg、jpeg、png格式。</p>
+                        <p>*照片容量不得超过5M.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="upload clear">
+                <div class="upload-img">
+                    <p>企业荣誉的照片</p>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess5"
+                            :before-upload="beforeAvatarUpload">
+                        <div class="label">
+                            <img v-if="ruleForm.qyry" :src="ruleForm.qyry" alt=""/>
+                            <p v-else>
+                                <i class="iconfont icon-jia"></i>
+                                <span>点击上传图片</span>
+                            </p>
+                        </div>
+                    </el-upload>
+                </div>
+                <div class="upload-text">
+                    <div class="text">
+                        <p>*可上传jpg、jpeg、png格式。</p>
+                        <p>*照片容量不得超过5M.</p>
                     </div>
                 </div>
             </div>
@@ -106,7 +207,12 @@
                     ],
                 },
                 ruleForm:{
-                    lingyu:[]
+                    lingyu:[],
+                    qyzz:'',
+                    mtzp:'',
+                    qywj:'',
+                    qynj:'',
+                    qyry:''
                 },
                 imgList:[]
             }
@@ -115,8 +221,20 @@
 
         },
         methods: {
-            handleAvatarSuccess(res, file) {
-                this.imgList.push(process.env.BASE_URL + res.data.path);
+            handleAvatarSuccess1(res, file) {
+                this.ruleForm.qyzz = process.env.BASE_URL + res.data.path;
+            },
+            handleAvatarSuccess2(res, file) {
+                this.ruleForm.mtzp = process.env.BASE_URL + res.data.path;
+            },
+            handleAvatarSuccess3(res, file) {
+                this.ruleForm.qywj = process.env.BASE_URL + res.data.path;
+            },
+            handleAvatarSuccess4(res, file) {
+                this.ruleForm.qynj = process.env.BASE_URL + res.data.path;
+            },
+            handleAvatarSuccess5(res, file) {
+                this.ruleForm.qyry = process.env.BASE_URL + res.data.path;
             },
             beforeAvatarUpload(file) {
                 const isLt5M = file.size / 1024 / 1024 < 5;
@@ -136,12 +254,7 @@
                 }
                 this.$refs['ruleForm'].validate((valid) => {
                     if (valid) {
-                        if(this.imgList.length == 0) {
-                            this.$message({
-                                message: '请上传公司相关图片！',
-                                type: 'error'
-                            });
-                        }else {
+                        if(this.ruleForm.qyzz && this.ruleForm.mtzp && this.ruleForm.qywj && this.ruleForm.qynj && this.ruleForm.qyry) {
                             var params = {...this.ruleForm};
                             params.pics = this.imgList;
                             params.lingyu = params.lingyu.join(',');
@@ -164,6 +277,11 @@
                                     });
                                 }
                             })
+                        }else {
+                            this.$message({
+                                message: '请上传公司相关照片！',
+                                type: 'error'
+                            });
                         }
                     } else {
                         this.$message({
@@ -206,6 +324,10 @@
                     text-align: center;
                     cursor: pointer;
                     .label {
+                        width: 276px;
+                        height: 180px;
+                    }
+                    p {
                         margin-top: 50px;
                     }
                     i {
@@ -216,6 +338,10 @@
                         margin-top: 20px;
                         color: #909399;
                         font-size: 14px;
+                    }
+                    img {
+                        width: 100%;
+                        height: 100%;
                     }
                 }
             }

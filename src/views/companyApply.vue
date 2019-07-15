@@ -315,15 +315,12 @@
             getHuodongInfo() {
                 if(this.$route.query.detail) {
                     var detail = JSON.parse(this.$route.query.detail);
-                    console.log(detail);
                     this.name = detail.title;
-                    this.date = [detail.time1,detail.time2];
                     this.yuejiangli = detail.jiangliyue;
                     this.nianjiangli = detail.jianglitian;
-                    this.diyaqixian = detail.diya2-detail.diya1;
+                    this.diyaqixian = detail.qixian;
                     this.yuejiesuo = detail.jiesuoyue;
                     this.nianjiesuo = detail.jiesuotian;
-
                 }
             },
             handleAvatarSuccess(res, file) {
@@ -374,6 +371,7 @@
                                 params.jieshouerweima = this.img3
                                 params.erweima = this.img1;
                                 params.jietu = this.img2;
+                                params.qixian = this.diyaqixian;
                                 params.yingyezhizhao = this.img;
                                 params.f = 2;
                                 params.token = sessionStorage.getItem('token');

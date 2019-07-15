@@ -185,7 +185,7 @@
         if (value === '') {
             callback(new Error('请输入抵押数量'));
         } else {
-            if (value>=25000 &&value <2500000) {
+            if (value>=25&&value <2500000) {
                 callback();
             }else {
                 callback(new Error('请输入正确的抵押数量'));
@@ -234,15 +234,28 @@
             this.getHuodongInfo()
         },
         methods: {
+            timeTrans(val) {
+                function add0(m){return m<10?'0'+m:m };
+                if(val) {
+                    var time = new Date(val*1000);
+                    var y = time.getFullYear();
+                    var m = time.getMonth()+1;
+                    var d = time.getDate();
+                    var h = time.getHours();
+                    var mm = time.getMinutes();
+                    var s = time.getSeconds();
+                    return y+'-'+add0(m)+'-'+add0(d);
+                }
+            },
             getHuodongInfo() {
                 if(this.$route.query.detail) {
                     var detail = JSON.parse(this.$route.query.detail);
                     console.log(detail);
                     this.name = detail.title;
-                    this.date = [detail.time1,detail.time2];
+                    this.date = [ this.timeTrans(detail.time1),this.timeTrans(detail.time2)];
                     this.yuejiangli = detail.jiangliyue;
                     this.nianjiangli = detail.jianglitian;
-                    this.diyaqixian = detail.diya2-detail.diya1;
+                    this.diyaqixian = detail.qixian;
                     this.yuejiesuo = detail.jiesuoyue;
                     this.nianjiesuo = detail.jiesuotian;
 
@@ -293,6 +306,7 @@
                                 params.jieshouerweima = this.img3
                                 params.canyuerweima = this.img1;
                                 params.jiaoyihaojietu = this.img2;
+                                params.qixian = this.diyaqixian;
                                 params.f = 1;
                                 params.token = sessionStorage.getItem('token');
                                 this.$axios.post('Huodong/setHuoDong',params).then(res => {
