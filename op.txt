@@ -1,12 +1,12 @@
 (1)ssh ubuntu@54.202.239.41 -i inve-us-oregon.pem
-(2)cd apache-tomcat-8.5.38/webapps/ROOT
+(2)cd apache-tomcat-8.5.38/webapps/test
 
 (3)"rm * -rf"
 
-(4)scp -r -i inve-us-oregon.pem dist/* ubuntu@54.202.239.41:~/apache-tomcat-8.5.38/webapps/ROOT/       (windows¶Ë×ÀÃæÔËĞĞ)
+(4)scp -r -i inve-us-oregon.pem dist/* ubuntu@54.202.239.41:~/apache-tomcat-8.5.38/webapps/test/       (windowsç«¯æ¡Œé¢è¿è¡Œ)
 
 
-¹ÙÍøµØÖ·£ºhttp://www.fortunechain.one/
+å®˜ç½‘åœ°å€ï¼šhttp://www.fortunechain.one/test
 
 
-½Ó¿ÚµØÖ·£ºhttp://apidoc.mcbn.cc/index.php/Home/item/show?item_id=67
+æ¥å£åœ°å€ï¼šhttp://apidoc.mcbn.cc/index.php/Home/item/show?item_id=67
