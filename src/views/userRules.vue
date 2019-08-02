@@ -1,9 +1,9 @@
 <template>
     <div class="notice-list">
-        <div class="nav-top clear">
-            <el-button type="primary" plain size="small" icon="el-icon-back" style="float: left;" @click="$router.go(-1)">返回</el-button>
-            <p>当前位置：<router-link to="/register">注册</router-link> > <router-link to="/userRules">《用户注册协议》</router-link></p>
-        </div>
+        <!--<div class="nav-top clear">-->
+            <!--<el-button type="primary" plain size="small" icon="el-icon-back" style="float: left;" @click="$router.go(-1)">返回</el-button>-->
+            <!--<p>当前位置：<router-link to="/register">注册</router-link> > <router-link to="/userRules">《用户注册协议》</router-link></p>-->
+        <!--</div>-->
         <div class="list">
             <h4>用户注册协议</h4>
             <div class="content-text">

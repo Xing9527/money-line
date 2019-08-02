@@ -3,7 +3,7 @@
         <img src="../assets/images/qiyehezuo.jpg" style="width: 100%;" alt=""/>
         <div class="apply">
             <h3>企业合作申请表</h3>
-            <p style="margin: 0px auto 20px;text-align: center;color: #f07e1b;">（如需提交申请，请先注册登录）</p>
+            <p style="margin: 0px auto 20px;text-align: center;color: #f07e1b;" v-if="show">（如需提交申请，请先注册登录）</p>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm" style="width: 90%;margin: 0 auto;">
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="ruleForm.name" style="max-width: 300px" placeholder="请输入您的姓名"></el-input>
@@ -179,7 +179,7 @@
                 rules: {
                     name: [
                         { required: true, message: '请输入您的姓名', trigger: 'blur' },
-                        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                        { min: 3, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur' }
                     ],
                     tel: [
                         { required: true, message : '请输入手机号', trigger: 'blur' },
@@ -214,11 +214,16 @@
                     qynj:'',
                     qyry:''
                 },
-                imgList:[]
+                imgList:[],
+                show:true
             }
         },
         mounted() {
-
+            if(sessionStorage.getItem('user')) {
+                this.show = false
+            }else {
+                this.show = true
+            }
         },
         methods: {
             handleAvatarSuccess1(res, file) {

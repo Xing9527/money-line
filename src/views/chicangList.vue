@@ -16,7 +16,7 @@
                     <el-col :span="8">{{item.createdtime}}</el-col>
                     <el-col :span="8">{{item.tittnum}}</el-col>
                     <el-col :span="8">
-                        <el-button type="text" @click="$router.push({ path:'/chicangDetail',query:{ id:item.id } })">详情</el-button>
+                        <el-button type="text" size="small" @click="$router.push({ path:'/chicangDetail',query:{ id:item.id } })">详情</el-button>
                     </el-col>
                 </el-row>
             </div>
@@ -53,7 +53,7 @@
                         this.$router.push('/login')
                     }
                     if(res.data.data) {
-                        this.changeList = res.data.data.list;
+                        this.changeList = res.data.data;
                     }
                 })
             }
@@ -109,6 +109,7 @@
                     color: #5d6b6e;
                     text-align: center;
                     margin: 8px 0;
+                    line-height: 40px;
                 }
             }
             .block {

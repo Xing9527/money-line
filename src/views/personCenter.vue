@@ -17,14 +17,15 @@
                             </span>
                         </div>
                         <div class="info-right col-lg-8 col-md-8 col-sm-12">
-                            <div style="text-align: right;">
-                                <el-button type="primary" size="small" @click='qiandao'>申请领取好友助力{{info.friendHongGu}}红股</el-button>
-                                <el-button type="primary" size="small" @click='qiandao' v-if="info.qiandaoStatus==2">签到送10红股</el-button>
+                            <div style="text-align: left;">
+                                <el-button type="primary" size="small" style="margin:0 10px 10px 0" @click='friendHonggu'>申请领取好友助力{{info.friendHongGu}}红股</el-button>
+                                <el-button type="primary" size="small" style="margin:0 0 10px" @click='qiandao' v-if="info.qiandaoStatus==2">签到送10红股</el-button>
                                 <el-button type="info" size="small" v-else>已签到</el-button>
                             </div>
                             <p>TITT数量</p>
                             <h5>{{info.titt}}</h5>
-                            <el-button size="small" type="primary" plain style="margin:10px 10px 0 0;" @click="routerPush('/volunteerApply')">申请志愿者</el-button>
+                            <el-button size="small" type="primary" v-if="info.is_zhiyuanzhe == 2" plain style="margin:10px 10px 0 0;" @click="routerPush('/volunteerApply')">申请志愿者</el-button>
+                            <el-button size="small" type="info" v-else plain style="margin: 10px 10px 0 0;">申请志愿者</el-button>
                             <el-button size="small" type="info" plain style="margin: 10px 0 0 0;" @click="copyVisiteCode(3)" class="copy3" :data-clipboard-text="copyTuiguangma">复制志愿者推广邀请码</el-button>
                         </div>
                     </div>
@@ -48,7 +49,7 @@
                         <el-col :span="7">持仓TITT数量</el-col>
                         <el-col :span="7">持仓交易明细</el-col>
                     </el-row>
-                    <el-row class="award-item" v-for="(item,index) in chicangList" :key="index">
+                    <el-row class="award-item" style="line-height: 40px;" v-for="(item,index) in chicangList" :key="index">
                         <el-col :span="10">{{item.createdtime}}</el-col>
                         <el-col :span="7" style="color: #f07e1b;">{{item.tittnum}}</el-col>
                         <el-col :span="7" style="color: #f07e1b;">
@@ -323,6 +324,10 @@
                 }
             },
             copyVisiteCode(val) {
+                if(this.info.is_zhiyuanzhe == 2) {
+                    this.$message.error('请先申请志愿者，通过后才可复制！');
+                    return
+                }
                 if(!this.checkLogin()) {
                     return false
                 };
@@ -418,6 +423,26 @@
                     if(res.data) {
                         this.doneHuodong = res.data.list;
                         this.total3 = res.data.totalPage
+                    }
+                })
+            },
+            friendHonggu() {
+                this.$axios.post('user/apply_bonus_shares',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        this.$message.error("请重新登录！");
+                        this.$router.push('/login')
+                    }
+                    if(res.data.sta == 1) {
+                        this.info.qiandaoStatus = 1;
+                        this.$message({
+                            message: '申请成功！',
+                            type: 'success'
+                        });
+                    }else {
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'error'
+                        });
                     }
                 })
             },

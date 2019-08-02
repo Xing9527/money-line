@@ -48,7 +48,8 @@
                         if(res.data.sta == 1) {
                             this.$message({
                                 message: '登录成功！',
-                                type: 'success'
+                                type: 'success',
+                                showClose: true
                             });
                             sessionStorage.setItem('user',JSON.stringify(res.data.user))
                             sessionStorage.setItem('token',res.data.user.token)

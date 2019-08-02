@@ -6,7 +6,7 @@
         </div>
         <div class="list">
             <h4>企业抵押TITT申请表</h4>
-            <p style="margin: 0px auto 20px;text-align: center;color: #f07e1b;">（如需提交申请，请先注册登录）</p>
+            <p style="margin: 0px auto 20px;text-align: center;color: #f07e1b;" v-if="show">（如需提交申请，请先注册登录）</p>
             <div class="form">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
                     <div class="row">
@@ -305,10 +305,16 @@
                 img:'',
                 img1:'',
                 img2:'',
-                img3:''
+                img3:'',
+                show:true
             }
         },
         mounted() {
+            if(sessionStorage.getItem('user')) {
+                this.show = false
+            }else {
+                this.show = true
+            }
             this.getHuodongInfo()
         },
         methods: {

@@ -61,9 +61,9 @@
                             <h5>TITT/USDT</h5>
                             <div class="usd">
                                 <p>{{info.top_equal}}</p>
-                                <p>≈{{info.top_yequal}}</p>
+                                <p>≈{{info.top_yequal | price}}</p>
                             </div>
-                            <span class="green-num">{{info.top_gain}}</span>
+                            <span class="green-num">{{info.top_gain | zhangfu1}}</span>
                         </div>
                         <div class="ban-right">
                             <div>
@@ -176,23 +176,21 @@
                 </div>
                 <div class="change-list">
                     <el-row class="list-title">
-                        <el-col :span="3">时间</el-col>
+                        <el-col :span="4">时间</el-col>
                         <el-col :span="3">交易对</el-col>
                         <el-col :span="3">方向</el-col>
                         <el-col :span="3">成交价格</el-col>
-                        <el-col :span="3">成交数量(TITT)</el-col>
-                        <el-col :span="3">成交数量(EOS)</el-col>
-                        <el-col :span="3">订单状态</el-col>
+                        <el-col :span="4">成交数量(TITT)</el-col>
+                        <el-col :span="4">成交数量(EOS)</el-col>
                         <el-col :span="3">TxID</el-col>
                     </el-row>
                     <el-row class="list-item" v-for="(item,index) in changeList" :key="index">
-                        <el-col :span="3">{{item.createtime}}</el-col>
+                        <el-col :span="4">{{item.createtime}}</el-col>
                         <el-col :span="3">{{item.jiaoyidui}}</el-col>
                         <el-col :span="3">{{item.fangxiang}}</el-col>
                         <el-col :span="3" style="color: #f07e1b;">{{item.price}}</el-col>
-                        <el-col :span="3">{{item.titt}}</el-col>
-                        <el-col :span="3">{{item.eos}}</el-col>
-                        <el-col :span="3">{{item.status}}</el-col>
+                        <el-col :span="4">{{item.titt}}</el-col>
+                        <el-col :span="4">{{item.eos}}</el-col>
                         <el-col :span="3">
                             <p style="color: #f07e1b;cursor: pointer;font-size: 12px" @click="checkDetail(item.trx_id)">{{item.trx_id | sixLength}}</p>
                         </el-col>
@@ -299,7 +297,7 @@
                 }
 
                 if(type == 'titt') {
-                    if(this.tittNum.trim() && this.tittNum >= 10) {
+                    if(this.tittNum.trim() && this.tittNum >= 0.05) {
                         if(isNaN(this.tittNum)) {
                             alert('请输入数字！');
                             return false;
@@ -307,7 +305,7 @@
                         this.$router.push({path:'/changeSure',query:{titt:this.tittNum,eos:(this.tittNum/200).toFixed(2),fangxiang:false}})
                     }
                 }else {
-                    if(this.eosNum.trim() && this.eosNum >= 0.05) {
+                    if(this.eosNum.trim() && this.eosNum >= 10) {
                         if(isNaN(this.eosNum)) {
                             alert('请输入数字！');
                             return false;

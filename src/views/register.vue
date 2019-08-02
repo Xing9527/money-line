@@ -51,7 +51,7 @@ import axios from 'axios'
         methods: {
             getHonggu() {
                 this.$axios.get('tourist/get_hg').then(res => {
-                    this.honggu = res.data.注册新用户奖励;
+                    this.honggu = res.data.邀请二级好友奖励;
                 })
             },
             register() {

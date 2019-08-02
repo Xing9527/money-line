@@ -2,7 +2,7 @@
     <div>
         <header id="slider-area">
             <nav class="navbar navbar-expand-md scrolling-navbar bg-white"
-                 style="position: fixed;left: 0;right: 0;top: 52px;">
+                 style="position: fixed;left: 0;right: 0;top: 52px;overflow: hidden;" v-if="phoneShow">
                 <div class="container">
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <ul class="navbar-nav mr-auto w-100 justify-content-center">
@@ -40,7 +40,7 @@
                 <div id="carousel-slider" class="carousel slide carousel-fade" data-ride="carousel">
                     <div class="carousel-inner" role="listbox">
                         <div class="carousel-item active">
-                            <img src="../assets/images/bg.jpg" style="margin-top: 96px;" alt="">
+                            <img src="../assets/images/bg.jpg" :style="phoneShow?'margin-top:96px;width:100%':'margin-top:56px'" alt="">
                             <div class="carousel-caption text-center">
                                 <h3 class="wow fadeInDown" data-wow-delay="0.3s">FORTUNE CHAIN</h3>
                                 <h2 class="wow bounceIn" data-wow-delay="0.6s">财富链</h2>
@@ -49,71 +49,38 @@
                                    data-wow-delay="1.2s" target="_blank" download="白皮书">点击下载白皮书</a>
                                    <!-- 置换输入 -->
                                 <div class="change">
-                                    <el-row class="row" v-if="isChange">
+                                    <el-row class="row">
                                         <el-col :span="9" class="col-lg-4 col-md-6 col-sm-6">
-                                            <img class="img" style="float: left;" src="../assets/images/u80.png" alt="">
+                                            <img class="img" v-if="select1 == 'EOS'" style="float: left;" src="../assets/images/u80.png" alt="">
+                                            <img class="img" v-else style="float: left;" src="../assets/images/logo.png" alt="">
                                             <div style="float: left;margin: 5px 10px 0;">
                                                 <span>使用...支付</span>
                                                 <div class="select">
                                                     <el-select v-model="select1" size="small" style="width: 60px;">
                                                         <el-option label="EOS" value="EOS"></el-option>
+                                                        <el-option label="TITT" value="TITT"></el-option>
                                                     </el-select>
                                                 </div>
                                             </div>
                                             <el-input v-model="ConvertData.eosValue" style="float: left;width: 45%;margin-top: 5px;" @blur="computed" @keyup.enter.native="computed"
                                                     placeholder="输入数量"></el-input>
                                         </el-col>
-                                        <el-col :span="1" style="text-align: center;cursor: pointer;" class="col-lg-1 col-md-1 col-sm-1">
-                                            <i class="iconfont icon-change"  @click="changeTwo"
-                                            style="display: inline-block;margin-top: 10px;color: #67c23a;font-size: 18px"></i>
+                                        <el-col :span="1" style="text-align: center;" class="col-lg-1 col-md-1 col-sm-1">
+                                            <i class="iconfont icon-change" style="display: inline-block;margin-top: 10px;color: #67c23a;font-size: 18px"></i>
                                         </el-col>
                                         <el-col :span="9" class="col-lg-4 col-md-6 col-sm-6">
-                                            <img class="img" src="../assets/images/logo.png" alt="">
+                                            <img class="img" v-if="select2 == 'TITT'" src="../assets/images/logo.png" alt="">
+                                            <img class="img" v-else src="../assets/images/u80.png" alt="">
                                             <div style="float: left;margin: 5px 10px 0;">
                                                 <span>接收</span>
                                                 <div class="select">
                                                     <el-select v-model="select2" size="small" style="width: 60px;">
+                                                        <el-option label="EOS" value="EOS"></el-option>
                                                         <el-option label="TITT" value="TITT"></el-option>
                                                     </el-select>
                                                 </div>
                                             </div>
                                             <el-input v-model="ConvertData.tittValue" style="float: left;width: 48%;margin-top: 5px;" placeholder="输入数量" :disabled="true"></el-input>
-                                        </el-col>
-                                        <el-col :span="5" class="col-lg-3 col-md-5 col-sm-5">
-                                            <el-button style="width: 100%;margin: 5px 0 0 0;" type="primary" @click="convert"><i
-                                                    class="iconfont icon-change"></i> 置换
-                                            </el-button>
-                                        </el-col>
-                                    </el-row>
-                                    <el-row class="row" v-else>
-                                        <el-col :span="9" class="col-lg-4 col-md-6 col-sm-6">
-                                            <img class="img" src="../assets/images/logo.png" alt="">
-                                            <div style="float: left;margin: 5px 10px 0;">
-                                                <span>使用...支付</span>
-                                                <div class="select">
-                                                    <el-select v-model="select2" size="small" style="width: 60px;">
-                                                        <el-option label="TITT" value="TITT"></el-option>
-                                                    </el-select>
-                                                </div>
-                                            </div>
-                                            <el-input v-model="ConvertData.tittValue" style="float: left;width: 45%;margin-top: 5px;" @blur="computed" @keyup.enter.native="computed" placeholder="输入数量"></el-input>
-                                        </el-col>
-                                        <el-col :span="1" style="text-align: center;cursor: pointer;" class="col-lg-1 col-md-1 col-sm-1">
-                                            <i class="iconfont icon-change"  @click="changeTwo"
-                                               style="display: inline-block;margin-top: 10px;color: #67c23a;font-size: 18px"></i>
-                                        </el-col>
-                                        <el-col :span="9" class="col-lg-4 col-md-6 col-sm-6">
-                                            <img class="img" style="float: left;" src="../assets/images/u80.png" alt="">
-                                            <div style="float: left;margin: 5px 10px 0;">
-                                                <span>接收</span>
-                                                <div class="select">
-                                                    <el-select v-model="select1" size="small" style="width: 60px;">
-                                                        <el-option label="EOS" value="EOS"></el-option>
-                                                    </el-select>
-                                                </div>
-                                            </div>
-                                            <el-input v-model="ConvertData.eosValue" style="float: left;width: 48%;margin-top: 5px;"
-                                                      placeholder="输入数量" :disabled="true"></el-input>
                                         </el-col>
                                         <el-col :span="5" class="col-lg-3 col-md-5 col-sm-5">
                                             <el-button style="width: 100%;margin: 5px 0 0 0;" type="primary" @click="convert"><i
@@ -658,7 +625,28 @@
                 select2: 'TITT',
                 isChange:true,
                 noticeList:[],
-                precent:0.005
+                precent:0.005,
+                phoneShow:true
+            }
+        },
+        watch: {
+            select1(val) {
+                this.ConvertData.eosValue = '';
+                this.ConvertData.tittValue = ''
+                if(val == 'EOS') {
+                    this.select2 = 'TITT'
+                }else {
+                    this.select2 = 'EOS'
+                }
+            },
+            select2(val) {
+                this.ConvertData.eosValue = '';
+                this.ConvertData.tittValue = ''
+                if(val == 'EOS') {
+                    this.select1 = 'TITT'
+                }else {
+                    this.select1 = 'EOS'
+                }
             }
         },
         mounted() {
@@ -668,6 +656,8 @@
             //     $('#loader').fadeOut();
             //   });
             // });
+            window.addEventListener('resize',this.handleResize,true)
+            this.handleResize();
             window.addEventListener('scroll', this.handleScroll, true);
             this.getNoticeList();
             this.getLineList();
@@ -697,6 +687,14 @@
             }
         },
         methods: {
+            handleResize() {
+                var clientWidth = document.body.clientWidth;
+                if(clientWidth<=850) {
+                    this.phoneShow = false;
+                }else {
+                    this.phoneShow = true;
+                }
+            },
             getNoticeList() {
                 this.$axios.get('index/gonggao').then(res => {
                     if(res.data.data) {
@@ -711,7 +709,7 @@
             getLineList() {
                 this.$axios.get('displace/getrecord').then(res => {
                     if(res.data) {
-                        this.precent = this.jiaoyidui[0].price;
+                        this.precent = res.data.jiaoyidui[0].price;
                     }
                 })
             },
@@ -756,13 +754,8 @@
                 // console.log($(document).scrollTop());
 
             },
-            changeTwo() {  //两个输入框交换位置
-                this.isChange = !this.isChange;
-                this.ConvertData.eosValue = '';
-                this.ConvertData.tittValue = ''
-            },
             computed() {
-                if(this.isChange) {
+                if(this.select1 == 'EOS') {
                     if(this.ConvertData.eosValue.trim()) {
                         if(isNaN(this.ConvertData.eosValue)) {
                             alert('请输入数字！');
@@ -771,12 +764,12 @@
                         this.ConvertData.tittValue = (this.ConvertData.eosValue/this.precent).toFixed(2)
                     }
                 }else {
-                    if(this.ConvertData.tittValue.trim()) {
-                        if(isNaN(this.ConvertData.tittValue)) {
+                    if(this.ConvertData.eosValue.trim()) {
+                        if(isNaN(this.ConvertData.eosValue)) {
                             alert('请输入数字！');
                             return false;
                         }
-                        this.ConvertData.eosValue = (this.ConvertData.tittValue*this.precent).toFixed(2)
+                        this.ConvertData.tittValue = (this.ConvertData.eosValue*this.precent).toFixed(2)
                     }
                 }
             },

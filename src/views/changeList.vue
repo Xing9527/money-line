@@ -8,27 +8,24 @@
         <div class="list">
             <div class="list-title">
                 <h4>最近一周的置换记录</h4>
-                <p>EOS系统将收取0.5%的手续费</p>
             </div>
             <div class="change-list">
                 <el-row class="item-title">
-                    <el-col :span="3">时间</el-col>
+                    <el-col :span="4">时间</el-col>
                     <el-col :span="3">交易对</el-col>
                     <el-col :span="3">方向</el-col>
                     <el-col :span="3">成交价格</el-col>
-                    <el-col :span="3">成交数量(TITT)</el-col>
-                    <el-col :span="3">成交数量(EOS)</el-col>
-                    <el-col :span="3">订单状态</el-col>
+                    <el-col :span="4">成交数量(TITT)</el-col>
+                    <el-col :span="4">成交数量(EOS)</el-col>
                     <el-col :span="3">TxID</el-col>
                 </el-row>
                 <el-row class="list-item" v-for="(item,index) in changeList" :key="index">
-                    <el-col :span="3">{{item.createtime}}</el-col>
+                    <el-col :span="4">{{item.createtime}}</el-col>
                     <el-col :span="3">{{item.jiaoyidui}}</el-col>
                     <el-col :span="3">{{item.fangxiang}}</el-col>
                     <el-col :span="3" style="color: #f07e1b;">{{item.price}}</el-col>
-                    <el-col :span="3">{{item.titt}}</el-col>
-                    <el-col :span="3">{{item.eos}}</el-col>
-                    <el-col :span="3">{{item.status}}</el-col>
+                    <el-col :span="4">{{item.titt}}</el-col>
+                    <el-col :span="4">{{item.eos}}</el-col>
                     <el-col :span="3" style="color: #f07e1b;">{{item.trx_id | sixLength}}</el-col>
                 </el-row>
             </div>

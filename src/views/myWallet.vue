@@ -1,6 +1,7 @@
 <template>
     <div class="wallet-container">
-        <img src="../assets/images/wallet-bg.jpg" style="width: 100%;" alt=""/>
+        <img src="../assets/images/wallet-bg.jpg" style="width: 100%;" v-if="bigImg" alt=""/>
+        <img src="../assets/images/wallet-bg-little.jpg" style="width: 100%;" v-else alt=""/>
         <p style="margin: 20px 0 ;color: #999;text-align: center">财富链主网上线前指定合作钱包，推荐使用以下钱包转账和存储TITT</p>
         <div class="use-wallet row">
             <div class="col-lg-4 col-md-4 col-sm-12">
@@ -52,7 +53,26 @@
 
 <script>
     export default {
-        name: "my-wallet"
+        name: "my-wallet",
+        data() {
+            return {
+                bigImg:true
+            }
+        },
+        mounted() {
+            window.addEventListener('resize',this.handleResize,true)
+            this.handleResize();
+        },
+        methods: {
+            handleResize() {
+                var clientWidth = document.body.clientWidth;
+                if(clientWidth<=850) {
+                    this.bigImg = false;
+                }else {
+                    this.bigImg = true;
+                }
+            },
+        }
     }
 </script>
 

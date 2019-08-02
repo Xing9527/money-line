@@ -18,7 +18,16 @@ Vue.filter('timeTrans',function(val) {
 
 Vue.filter('zhangfu',function(val) {
     if(val && val != '--') {
-        return val.toFixed(2) + '%'
+        return (val*100).toFixed(2) + '%'
+    }else {
+        return '--'
+    }
+})
+
+Vue.filter('zhangfu1',function(val) {
+    if(val && val != '--') {
+        var str = val.split('%').join('')*1;
+        return str.toFixed(5) + '%'
     }else {
         return '--'
     }
