@@ -76,7 +76,7 @@
                 color: #909399;
             }
             .content-text {
-                margin: 0 auto;
+                margin: 30px auto 0;
                 font-size: 13px;
                 color: #696266;
                 line-height: 24px;

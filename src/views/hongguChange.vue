@@ -63,6 +63,7 @@
             this.getWeekList();
             if(sessionStorage.getItem('user')) {
                 this.hongguweijiesuo = JSON.parse(sessionStorage.getItem('user')).hongguweijiesuo;
+                this.titt = JSON.parse(sessionStorage.getItem('user')).username;
             }
         },
         methods: {

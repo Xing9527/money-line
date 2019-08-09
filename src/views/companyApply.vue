@@ -110,7 +110,7 @@
                         <div class="col-lg-9 cold--md-9 col-sm-12">
                             <el-form-item label="抵押数量" prop="num">
                                 <el-input placeholder="请输入您的抵押数量" style="max-width: 337px" v-model="ruleForm.num"></el-input>
-                                <span style="color: #c2c7ce;font-size: 14px">（最低25000，最高2499999）</span>
+                                <span style="color: #c2c7ce;font-size: 14px">（最低50，最高2499999）</span>
                             </el-form-item>
                         </div>
                     </div>
@@ -238,7 +238,7 @@
         if (value === '') {
             callback(new Error('请输入抵押数量'));
         } else {
-            if (value>=25000 &&value <2500000) {
+            if (value>=50 &&value <2500000) {
                 callback();
             }else {
                 callback(new Error('请输入正确的抵押数量'));
@@ -311,6 +311,7 @@
         },
         mounted() {
             if(sessionStorage.getItem('user')) {
+                this.ruleForm.jieshouzhanghao = JSON.parse(sessionStorage.getItem('user')).username
                 this.show = false
             }else {
                 this.show = true

@@ -138,6 +138,7 @@
             }
         },
         mounted() {
+            this.getInfo()
             this.phoneList = phone;
         },
         methods: {

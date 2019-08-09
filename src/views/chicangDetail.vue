@@ -9,7 +9,7 @@
             <div class="change-list">
                 <el-row class="list-item">
                     <el-col :span="12"><span>日期</span></el-col>
-                    <el-col :span="12" style="text-align: left;color: #5d6b6e;">{{detail.createdtime}}</el-col>
+                    <el-col :span="12" style="text-align: left;color: #5d6b6e;">{{detail.createdtime | timeTrans}}</el-col>
                 </el-row>
                 <el-row class="list-item">
                     <el-col :span="12"><span>打入EOS数量</span></el-col>
@@ -71,7 +71,7 @@
                         this.$router.push('/login')
                     }
                     if(res.data.data) {
-                        this.detail = res.data.data.list;
+                        this.detail = res.data.data;
                     }
                 })
             }

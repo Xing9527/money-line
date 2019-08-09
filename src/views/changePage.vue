@@ -89,7 +89,6 @@
                         </div>
                     </div>
                     <div class="echarts" v-loading="loading">
-                        <div id="line" style="height: 300px;"></div>
                         <div class="times">
                             <span @click="times='60'" :style="times=='60'?'color:#f07e1b':''">60m</span>
                             <span @click="times='24'" :style="times=='24'?'color:#f07e1b':''">24H</span>
@@ -97,7 +96,14 @@
                             <span @click="times='1'" :style="times=='1'?'color:#f07e1b':''">1M</span>
                             <!--<span @click="times='12'" :style="times=='12'?'color:#f07e1b':''">12M</span>-->
                         </div>
-                        <div id="bar" style="height: 100px;"></div>
+                        <div v-if="chartData.time.length != 0">
+                            <div id="line" style="height: 300px;"></div>
+                            <div id="bar" style="height: 100px;"></div>
+                        </div>
+                        <div style="text-align:center;position:absolute" v-else>
+                            <img style="width:80%;margin:10px auto 0" src="../assets/images/no-echarts.png" alt=""/>
+                            <p style="text-align: center">暂无此时间段置换记录</p>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12">
@@ -353,23 +359,22 @@
                                 this.chartData.time.push(this.timestampToTime(item))
                             })
                         }
-                        this.chartData.num = res.data.data.titt.data;
-                        this.lineChart();
-                        this.barChart();
+                        this.chartData.num = res.data.data.titt.data
                     }else {
                         this.chartData = {
                             data:[],
                             num:[],
                             time:[]
                         }
-                        this.lineChart();
-                        this.barChart();
                     }
+                    this.lineChart();
+                    this.barChart();
                 })
             },
             lineChart() {
                 var lineChart = echarts.init(document.getElementById('line'));
                 lineChart.resize()
+
                 var option = {
                     tooltip: {
                         trigger: 'axis'
@@ -440,6 +445,7 @@
             },
             barChart() {
                 var barChart = echarts.init(document.getElementById('bar'));
+                barChart.resize()
                 var option = {
                     tooltip: {
                         trigger: 'axis'
@@ -490,7 +496,6 @@
                         }
                     ]
                 };
-                barChart.resize()
                 barChart.setOption(option);
             },
             getWeekList() {

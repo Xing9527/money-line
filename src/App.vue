@@ -40,5 +40,7 @@ export default {
     .rule .el-checkbox {
         margin-right: 5px;
     }
-
+.notice-list ol {
+    width: 100%!important;
+}
 </style>

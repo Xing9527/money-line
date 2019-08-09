@@ -5,14 +5,16 @@
                 <div class="info">
                     <div class="row">
                         <div class="info-left col-lg-4 col-md-4 col-sm-12">
-                            <img class="header-img" src="../assets/images/center-header.png" alt=""/>
+                            <img style="width: 72px;height:72px;" src="../assets/images/center-header.jpg" alt=""/>
                             <p class="phone">{{userName}}</p>
                             <span class="kyc" @click="routerPush('/kyc1')">
-                                <img src="../assets/images/kyc1.png" alt=""/>
+                                <img v-if="info.kyc1 == 1" src="../assets/images/kyc1.png" alt=""/>
+                                <img v-else src="../assets/images/kyc2.png" alt=""/>
                                 <span>KYC1认证</span>
                             </span>
                             <span class="kyc" @click="routerPush('/kyc2')">
-                                <img src="../assets/images/kyc2.png" alt=""/>
+                                <img v-if="info.kyc2 == 1" src="../assets/images/kyc1.png" alt=""/>
+                                <img v-else src="../assets/images/kyc2.png" alt=""/>
                                 <span>KYC2认证</span>
                             </span>
                         </div>
@@ -155,16 +157,10 @@
                                 <span>{{info.diyaNum}}</span>
                             </div>
                             <h5>可参加抵押活动</h5>
-                            <el-button v-for="(item,index) in diyaList" :key="index" :type="item.status==1?'primary':'info'" style="margin:20px 30px 0 0" size="small" @click="goDiya(item)">{{item.time1 | timeTrans}}{{item.title}}【<span v-if="item.type==1">企业抵押</span><span v-else>个人抵押</span>】</el-button>
-                            <div class="block">
-                                <el-pagination
-                                        :page-size="4"
-                                        :pager-count="5"
-                                        layout="prev, pager, next"
-                                        :total="diyaTotal"
-                                        @current-change="diyaCurrentChange">
-                                </el-pagination>
-                            </div>
+                            <p style="margin: 20px 0;">个人抵押</p>
+                            <el-button v-for="(item,index) in personList" :key="item.createtime" type="primary" style="margin:0px 30px 20px 0" size="small" @click="goDiya(item)">{{item.time1 | timeTrans}}{{item.title}}【<span v-if="item.type==2">企业抵押</span><span v-else>个人抵押</span>】</el-button>
+                            <p style="margin: 20px 0;">企业抵押</p>
+                            <el-button v-for="(item,index) in companyList" :key="item.createtime" type="primary" style="margin:0px 30px 20px 0" size="small" @click="goDiya(item)">{{item.time1 | timeTrans}}{{item.title}}【<span v-if="item.type==2">企业抵押</span><span v-else>个人抵押</span>】</el-button>
                             <h5>已参加抵押活动</h5>
                         </div>
                         <div class="pledge-item"  v-for="(item,index) in doneHuodong" :key=index>
@@ -175,7 +171,7 @@
                                         <p>预期分红</p>
                                         <span>{{item.fenhong}}</span>
                                     </div>
-                                    <p class="time">到期日：{{endtime}}</p>
+                                    <p class="time">到期日：{{item.endtime}}</p>
                                 </div>
                                 <div class="item-right col-lg-8 col-md-8 col-sm-12">
                                     <el-row class="right-row">
@@ -184,19 +180,19 @@
                                     </el-row>
                                     <el-row class="right-row">
                                         <el-col :span="7">抵押时间周期</el-col>
-                                        <el-col :span="17" style="padding-left: 5px;">{{item.diyazhouqi}}</el-col>
+                                        <el-col :span="17" style="padding-left: 5px;">{{item.diyatimezhouqi}}</el-col>
                                     </el-row>
                                     <el-row class="right-row">
                                         <el-col :span="7">解锁条件</el-col>
                                         <el-col :span="17" style="padding-left: 5px;">{{item.jiesuotiaojian}}</el-col>
                                     </el-row>
-                                    <el-row class="right-row">
-                                        <el-col :span="7">抵押分红时间</el-col>
-                                        <el-col :span="17" style="padding-left: 5px;">{{diyafenhongshijian}}</el-col>
-                                    </el-row>
+<!--                                    <el-row class="right-row">-->
+<!--                                        <el-col :span="7">抵押分红时间</el-col>-->
+<!--                                        <el-col :span="17" style="padding-left: 5px;">{{diyafenhongshijian}}</el-col>-->
+<!--                                    </el-row>-->
                                     <el-row class="right-row">
                                         <el-col :span="7">预期分红数量</el-col>
-                                        <el-col :span="17" style="padding-left: 5px;">{{yuqifenhongliang}}（个）</el-col>
+                                        <el-col :span="17" style="padding-left: 5px;">{{item.yuqifenhongliang}}（个）</el-col>
                                     </el-row>
                                     <el-row class="right-row">
                                         <el-col :span="7">抵押分红解锁</el-col>
@@ -247,7 +243,8 @@
                 recordTotal:0,
                 nums:{},
                 diyaTotal:0,
-                diyaList:[],
+                personList:[],
+                companyList:[],
                 doneHuodong:[],
                 total3:0,
                 chicangList:[],
@@ -317,7 +314,7 @@
                 })
             },
             goDiya(val) {
-                if(val.type == 1) {
+                if(val.type == 2) {
                     this.$router.push({path:'/companyApply',query:{detail:JSON.stringify(val)}})
                 }else {
                     this.$router.push({path:'/personApply',query:{detail:JSON.stringify(val)}})
@@ -408,8 +405,10 @@
                         return
                     }
                     if(res.data.data) {
-                        this.diyaList = res.data.data.list;
-                        this.diyaTotal = res.data.data.totalPage
+                        if(res.data.data.list && res.data.data.list.length != 0) {
+                            this.personList = res.data.data.list.filter(item => item.type == 1)
+                            this.companyList = res.data.data.list.filter(item => item.type == 2)
+                        }
                     }
                 })
             },
@@ -433,7 +432,6 @@
                         this.$router.push('/login')
                     }
                     if(res.data.sta == 1) {
-                        this.info.qiandaoStatus = 1;
                         this.$message({
                             message: '申请成功！',
                             type: 'success'
