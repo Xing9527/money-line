@@ -1,3 +1,9 @@
+@media (min-width: 1800px) and (max-width: 3000px) {
+    #carousel-area .carousel-item .bg_img {
+        width: 100%!important;
+    }
+}
+
 @media (min-width: 768px) and (max-width: 1024px) {
   .section-header .section-title {
     font-size: 22px;
@@ -33,9 +39,9 @@
   .item-boxes h4 {
     font-size: 16px;
   }
-  #carousel-area .carousel-item .carousel-caption {
-    top: 35%;
-  }
+  /*#carousel-area .carousel-item .carousel-caption {*/
+  /*  top: 35%;*/
+  /*}*/
   #carousel-area .carousel-item .carousel-caption h3 {
     font-size: 22px;
   }

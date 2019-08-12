@@ -100,7 +100,7 @@
                     </el-row>
                     <el-row class="invite-code">
                         <el-col :span="6">我的邀请链接</el-col>
-                        <el-col :span="14" style="word-wrap: break-word">http://fortunechain.one/register?i={{copyValue}}
+                        <el-col :span="14" style="word-wrap: break-word">http://www.fortunechain.one/test/#/register?i={{copyValue}}
                         </el-col>
                         <el-col :span="4">
                             <el-button size="small" type="primary" class="copy2" plain style="padding: 6px 12px;" :data-clipboard-text="'http://fortunechain.one/register?i=' + copyValue"
@@ -114,7 +114,7 @@
                     <el-row class="award-title">
                         <el-col :span="10">时间</el-col>
                         <el-col :span="7">奖励来源</el-col>
-                        <el-col :span="7">通证奖励数额</el-col>
+                        <el-col :span="7">红股奖励数额</el-col>
                     </el-row>
                     <el-row class="award-item" v-for="(item,index) in awardList" :key="index">
                         <el-col :span="10">{{item.createtime}}</el-col>
@@ -132,16 +132,16 @@
                     </div>
                 </div>
                 <div class="award-news">
-                    <h5>奖励政策</h5>
+                    <h5>财富商学院</h5>
                     <div class="news-item">
                         <p v-for="(item,index) in newsList" :key="index" @click="$router.push({path:'/awardDetail',query:{data:JSON.stringify(item)}})">{{index+1}}、{{item.title}}</p>
                     </div>
                 </div>
                 <div class="rules">
-                    <h5>通证领取活动细则</h5>
+                    <h5>奖励领取活动细则</h5>
                     <div class="item">
                         <p>1、活动期间，注册新账号即可获得注册奖励，后续将根据实际情况进行调整。</p>
-                        <p>2、好友通过你的邀请码、专属邀请链接、专属邀请二维码注册成功后，你的通证账户即刻获得邀请奖励；三种方式中的任意方式均可。</p>
+                        <p>2、好友通过你的邀请码、专属邀请链接、专属邀请二维码注册成功后，你的账户即刻获得邀请奖励；三种方式中的任意方式均可。</p>
                         <p>3、通证保留随时对这侧领取TITT、邀请奖励TITT活动规则进行调整的权力，但是对你推荐的好友数量没有限制。</p>
                         <p>4、通证会严查重复的或者虚假的账号，一经发现，将不会对注册及邀请进行奖励。</p>
                     </div>

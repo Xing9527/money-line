@@ -39,14 +39,17 @@ import axios from 'axios'
         data() {
             return {
                 formData:{
-
+                    yaoqing:''
                 },
                 checked:true,
-                honggu:''
+                honggu:'',
             }
         },
         mounted() {
-            this.getHonggu()
+            this.getHonggu();
+            if(this.$route.query.i) {
+                this.formData.yaoqing = this.$route.query.i;
+            }
         },
         methods: {
             getHonggu() {

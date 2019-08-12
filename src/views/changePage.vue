@@ -231,7 +231,7 @@
                 times:'24',
                 chartData:{
                     data:[],
-                    time:[],
+                    time:[1],
                     num:[]
                 },
                 noticeList:[],
@@ -360,6 +360,10 @@
                             })
                         }
                         this.chartData.num = res.data.data.titt.data
+                        this.$nextTick(() => {
+                            this.lineChart();
+                            this.barChart();
+                        })
                     }else {
                         this.chartData = {
                             data:[],
@@ -367,8 +371,6 @@
                             time:[]
                         }
                     }
-                    this.lineChart();
-                    this.barChart();
                 })
             },
             lineChart() {
@@ -663,13 +665,12 @@
                 }
                 .echarts {
                     position: relative;
+                    padding-top: 20px;
                     margin-top: 20px;
-                    height: 421px;
+                    height: 445px;
                     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.16);
                     .times {
-                        position: absolute;
-                        left: 20px;
-                        top: 20px;
+                        margin-left: 20px;
                         font-size: 12px;
                         color: #5b6d6e;
                         span {

@@ -40,7 +40,7 @@
                 <div id="carousel-slider" class="carousel slide carousel-fade" data-ride="carousel">
                     <div class="carousel-inner" role="listbox">
                         <div class="carousel-item active">
-                            <img src="../assets/images/bg.jpg" :style="phoneShow?'margin-top:96px;width:100%':'margin-top:56px'" alt="">
+                            <img src="../assets/images/bg.jpg" class="bg_img" :style="phoneShow?'margin-top:96px;':'margin-top:56px'" alt="">
                             <div class="carousel-caption text-center">
                                 <h3 class="wow fadeInDown" data-wow-delay="0.3s">FORTUNE CHAIN</h3>
                                 <h2 class="wow bounceIn" data-wow-delay="0.6s">财富链</h2>
