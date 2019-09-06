@@ -9,17 +9,17 @@
             <div class="change">
                 <div class="can-change">
                     <p>当前可兑换红股数量</p>
-                    <p>{{$route.query.hongguweijiesuo}}</p>
+                    <p>{{hongguyijiesuo}}</p>
                 </div>
                 <div class="input">
                     <div class="top">
                         <el-input v-model="hongguNum" style="width: 200px;" placeholder="请输入想兑换的红股数量" @change="getTitt"></el-input>
                         <span>可兑换</span>
                         <span>{{tittNum}}TITT</span>
-                        <span>（红股置换TITT比例为200:1）</span>
+                        <span>（红股置换TITT比例为100:1）</span>
                     </div>
                     <div class="middle">
-                        <el-input v-model="titt" style="width: 200px;" placeholder="请输入接收TITT账号"></el-input>
+                        <el-input v-model="titt" style="width: 200px;" placeholder="请输入接收TITT账号" :disabled="true"></el-input>
                         <span>（审核通过后，工作人员会发放到您的账户，请注意查收）</span>
                     </div>
                     <div class="bottom">
@@ -56,19 +56,26 @@
                 hongguNum:'',
                 titt:'',
                 tittNum:0,
-                hongguweijiesuo:''
+                hongguyijiesuo:''
+            }
+        },
+        watch: {
+            hongguNum(val) {
+                if(val > this.hongguyijiesuo) {
+                    this.hongguNum = this.hongguyijiesuo
+                }
             }
         },
         mounted() {
             this.getWeekList();
+            this.getHonggu()
             if(sessionStorage.getItem('user')) {
-                this.hongguweijiesuo = JSON.parse(sessionStorage.getItem('user')).hongguweijiesuo;
                 this.titt = JSON.parse(sessionStorage.getItem('user')).username;
             }
         },
         methods: {
             getTitt(val) {
-                this.tittNum = (val/200).toFixed(2);
+                this.tittNum = (val/100).toFixed(2);
             },
             handleSizeChange(size) {
                 this.size = size;
@@ -85,6 +92,17 @@
                     }
                     if(res.data.data) {
                         this.changeList = res.data.data;
+                    }
+                })
+            },
+            getHonggu() {
+                this.$axios.get('user/userinfo',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        this.$message.error("请重新登录！");
+                        this.$router.push('/login')
+                    }
+                    if(res.data) {
+                        this.hongguyijiesuo = res.data.hongguyijiesuo;
                     }
                 })
             },
@@ -106,8 +124,8 @@
                             });
 
                             this.hongguNum = '';
-                            this.titt = '';
-                            this.getWeekList()
+                            this.getWeekList();
+                            this.getHonggu();
                         }else {
                             this.$message.error(res.data.msg);
                         }

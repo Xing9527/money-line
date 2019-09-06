@@ -5,7 +5,8 @@
                 <div class="info">
                     <div class="row">
                         <div class="info-left col-lg-4 col-md-4 col-sm-12">
-                            <img style="width: 72px;height:72px;" src="../assets/images/center-header.jpg" alt=""/>
+<!--                            <img style="width: 72px;height:72px;" src="../assets/images/center-header.jpg" alt=""/>-->
+                            <img style="width: 72px;height:72px;border-radius:50%" src="../assets/images/caifumiao.jpg" alt=""/>
                             <p class="phone">{{userName}}</p>
                             <span class="kyc" @click="routerPush('/kyc1')">
                                 <img v-if="info.kyc1 == 1" src="../assets/images/kyc1.png" alt=""/>
@@ -136,6 +137,15 @@
                     <div class="news-item">
                         <p v-for="(item,index) in newsList" :key="index" @click="$router.push({path:'/awardDetail',query:{data:JSON.stringify(item)}})">{{index+1}}、{{item.title}}</p>
                     </div>
+                    <div class="block">
+                        <el-pagination
+                                :page-size="4"
+                                :pager-count="5"
+                                layout="prev, pager, next"
+                                :total="collegeTotal"
+                                @current-change="collegeCurrentChange">
+                        </el-pagination>
+                    </div>
                 </div>
                 <div class="rules">
                     <h5>奖励领取活动细则</h5>
@@ -200,7 +210,11 @@
                                     </el-row>
                                     <el-row class="right-row">
                                         <el-col :span="7">活动状态</el-col>
-                                        <el-col :span="17" style="padding-left: 5px;"><span v-if="item.endStatus == 2">已结束</span><span v-else>未结束</span></el-col>
+                                        <el-col :span="17" style="padding-left: 5px;">
+                                            <span v-if="item.endStatus == 2">已结束</span>
+                                            <span v-else>未结束</span>
+                                            <el-button type="text" v-if="item.end_display == 1" style="color:#f07e1b;margin-left:10px" @click="applyOver(item.pkid)">申请终止</el-button>
+                                        </el-col>
                                     </el-row>
                                 </div>
                             </div>
@@ -239,8 +253,10 @@
                 copyValue:'',
                 copyTuiguangma:'',
                 page1:1,
+                page2:1,
                 page3:1,
                 recordTotal:0,
+                collegeTotal:0,
                 nums:{},
                 diyaTotal:0,
                 personList:[],
@@ -295,7 +311,7 @@
             routerPush(url) {
                 if(this.checkLogin()) {
                     if(url == '/hongguChange') {
-                        this.$router.push({path:url,query:{hongguweijiesuo:this.info.hongguweijiesuo}})
+                        this.$router.push({path:url,query:{hongguyijiesuo:this.info.hongguyijiesuo}})
                     }else {
                         this.$router.push(url)
                     }
@@ -352,19 +368,20 @@
                 this.page1 = page;
                 this.getAwardList()
             },
-            diyaCurrentChange(page) {
+            collegeCurrentChange(page) {
                 this.page2  = page;
-                this.getDiya()
+                this.getNewsList()
             },
             handleCurrentChange(page) {
                 this.page3 = page;
                 this.getDoneDiya()
             },
             getNewsList() {
-                this.$axios.get('index/jiangli').then(res => {
+                this.$axios.get('index/jiangli',{page:this.page2,limit:4}).then(res => {
                     if(res.data.data) {
                         this.newsList = res.data.data
                     }
+                    this.collegeTotal = res.data.total;
                 })
             },
             getAwardList() {
@@ -454,6 +471,25 @@
                         this.info.qiandaoStatus = 1;
                         this.$message({
                             message: '签到成功！',
+                            type: 'success'
+                        });
+                    }else {
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            },
+            applyOver(id) {
+                this.$axios.post('huodong/stop',{token:sessionStorage.getItem('token'),huodongid:id}).then(res => {
+                    if(res.data.sta == 401) {
+                        this.$message.error("请重新登录！");
+                        this.$router.push('/login')
+                    }
+                    if(res.data.sta == 1) {
+                        this.$message({
+                            message: '申请成功！',
                             type: 'success'
                         });
                     }else {

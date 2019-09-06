@@ -1,10 +1,11 @@
 <template>
     <div style="padding-top: 56px;">
-        <img src="../assets/images/qiyehezuo.jpg" style="width: 100%;" alt=""/>
+        <img src="../assets/images/qiyehezuo.jpg" v-if="bigImg" style="width: 100%;" alt=""/>
+        <img src="../assets/images/qiyehezuo.png" v-else style="width: 100%;" alt=""/>
         <div class="apply">
             <h3>企业合作申请表</h3>
             <p style="margin: 0px auto 20px;text-align: center;color: #f07e1b;" v-if="show">（如需提交申请，请先注册登录）</p>
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm" style="width: 90%;margin: 0 auto;">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm part" style="width: 90%;margin: 0 auto;">
                 <el-form-item label="姓名" prop="name">
                     <el-input v-model="ruleForm.name" style="max-width: 300px" placeholder="请输入您的姓名"></el-input>
                 </el-form-item>
@@ -26,7 +27,7 @@
                 <el-form-item label="座机" prop="zuoji">
                     <el-input v-model="ruleForm.zuoji" style="max-width: 300px;" placeholder="请输入您的公司座机"></el-input>
                 </el-form-item>
-                <el-form-item label="意向合作领域" prop="lingyu">
+                <el-form-item label="意向合作领域选项" prop="lingyu">
                     <el-checkbox-group v-model="ruleForm.lingyu">
                         <el-checkbox label="超级节点" value="超级节点"></el-checkbox>
                         <el-checkbox label="电子商城" value="电子商城"></el-checkbox>
@@ -215,7 +216,8 @@
                     qyry:''
                 },
                 imgList:[],
-                show:true
+                show:true,
+                bigImg:true
             }
         },
         mounted() {
@@ -224,8 +226,18 @@
             }else {
                 this.show = true
             }
+            window.addEventListener('resize',this.handleResize,true)
+            this.handleResize();
         },
         methods: {
+            handleResize() {
+                var clientWidth = document.body.clientWidth;
+                if(clientWidth<=850) {
+                    this.bigImg = false;
+                }else {
+                    this.bigImg = true;
+                }
+            },
             handleAvatarSuccess1(res, file) {
                 this.ruleForm.qyzz = process.env.BASE_URL + res.data.path;
             },

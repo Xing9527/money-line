@@ -1,6 +1,7 @@
 <template>
     <div class="login clear">
-        <img src="../assets/images/login_bg.jpg" style="width: 100%;position: absolute;top: 55px;z-index: -1;" alt=""/>
+        <img src="../assets/images/login_bg.jpg" v-if="bigImg" style="width: 100%;position: absolute;top: 56px;z-index: -1;" alt=""/>
+        <img src="../assets/images/login_bg.png" v-else style="width: 100%;position: absolute;top: 56px;z-index: -1;" alt=""/>
         <div class="form">
             <div class="form-content">
                 <h3>登录</h3>
@@ -26,14 +27,25 @@
             return {
                 formData:{
 
-                }
+                },
+                bigImg:true
             }
         },
         mounted() {
             sessionStorage.removeItem('user');
-            sessionStorage.removeItem('token')
+            sessionStorage.removeItem('token');
+            window.addEventListener('resize',this.handleResize,true)
+            this.handleResize();
         },
         methods: {
+            handleResize() {
+                var clientWidth = document.body.clientWidth;
+                if(clientWidth<=850) {
+                    this.bigImg = false;
+                }else {
+                    this.bigImg = true;
+                }
+            },
             subLogin() {
                 if(!this.formData.eos) {
                     this.$message.error('请输入用户名！');

@@ -707,9 +707,9 @@
                 })
             },
             getLineList() {
-                this.$axios.get('displace/getrecord').then(res => {
+                this.$axios.get('displace/getRecord').then(res => {
                     if(res.data) {
-                        this.precent = res.data.jiaoyidui[0].price;
+                        this.precent = res.data.replacement.titt__eos;
                     }
                 })
             },

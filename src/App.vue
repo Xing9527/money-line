@@ -43,4 +43,8 @@ export default {
 .notice-list ol {
     width: 100%!important;
 }
+
+    .apply .part .el-form-item__label {
+        width: 80px!important;
+    }
 </style>

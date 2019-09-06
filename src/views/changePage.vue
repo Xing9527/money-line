@@ -248,11 +248,11 @@
             },
             tittNum(val) {
                 if(val) {
-                    this.titt = val/this.precent.toFixed(4);
+                    this.titt = (val/this.precent).toFixed(4);
                 }
             },
             eosNum(val) {
-                this.eos = val*this.precent;
+                this.eos = (val*this.precent).toFixed(4);
             }
         },
         mounted() {
@@ -522,7 +522,8 @@
                     if(res.data) {
                         this.recardList = res.data.lianshangjilu;
                         this.jiaoyidui = res.data.jiaoyidui;
-                        this.precent = this.jiaoyidui[0].price;
+                        this.precent = res.data.replacement.titt__eos;
+                        console.log(res.data,this.precent);
                     }
                 })
             },

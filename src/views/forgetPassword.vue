@@ -1,6 +1,7 @@
 <template>
     <div class="login clear">
-        <img src="../assets/images/login_bg.jpg" style="width: 100%;position: absolute;top: 56px;z-index: -1;" alt=""/>
+        <img src="../assets/images/login_bg.jpg" v-if="bigImg" style="width: 100%;position: absolute;top: 56px;z-index: -1;" alt=""/>
+        <img src="../assets/images/login_bg.png" v-else style="width: 100%;position: absolute;top: 56px;z-index: -1;" alt=""/>
         <div class="form">
             <div class="form-content">
                 <h3>重置密码</h3>
@@ -33,7 +34,8 @@
                     // phone_befor:'+86'
                 },
                 options:[],
-                active:0
+                active:0,
+                bigImg:true
             }
         },
         mounted() {
@@ -41,8 +43,18 @@
             if(this.$route.query.email && this.$route.query.unid) {
                 this.active = 1
             }
+            window.addEventListener('resize',this.handleResize,true)
+            this.handleResize();
         },
         methods: {
+            handleResize() {
+                var clientWidth = document.body.clientWidth;
+                if(clientWidth<=850) {
+                    this.bigImg = false;
+                }else {
+                    this.bigImg = true;
+                }
+            },
             sureEmail() {
                 if(this.checkEmail()) {
                      this.$axios.get('tourist/findpwd',{email:this.formData.email}).then(res => {
