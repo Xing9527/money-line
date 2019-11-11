@@ -4,6 +4,12 @@
         <img src="../assets/images/login_bg.png" v-else style="width: 100%;position: absolute;top: 56px;z-index: -1;" alt=""/>
         <div class="form">
             <div class="form-content">
+                <div style="margin:-30px 0 20px">
+                    <el-radio-group v-model="radio">
+                        <el-radio-button label="eos账号用户注册"></el-radio-button>
+                        <el-radio-button label="手机号用户注册"></el-radio-button>
+                    </el-radio-group>
+                </div>
                 <h3>注册即可获得{{honggu}}红股</h3>
                 <p class="title">邀请好友获得更多</p>
                 <div class="phone">
@@ -13,7 +19,7 @@
                     <el-input v-model="formData.pwd" placeholder="请设定您的登录密码，至少8位" show-password></el-input>
                 </div>
                 <div style="margin-bottom: 10px;">
-                    <el-input v-model="formData.yaoqing" placeholder="请输入邀请码（可选）"></el-input>
+                    <el-input v-model="formData.yaoqing" placeholder="请输入邀请码（必填）"></el-input>
                 </div>
                 <div style="margin-bottom: 10px;">
                     <el-input v-model="formData.payPwd" placeholder="请设定您的资金密码，至少6位数字" show-password></el-input>
@@ -21,6 +27,9 @@
                 <div style="margin-bottom: 10px;">
                     <el-input v-model="formData.email" placeholder="请输入常用Email地址"></el-input>
                 </div>
+<!--                <div style="margin-bottom: 10px;">-->
+<!--                    <el-input v-model="formData.mobile" placeholder="请输入常用手机号"></el-input>-->
+<!--                </div>-->
                 <p class="rule">
                     <el-checkbox v-model="checked"></el-checkbox>
                     我已阅读并同意
@@ -28,6 +37,7 @@
                 </p>
                 <el-button type="primary" style="width: 100%;margin: 10px 0 0;" @click="register">GO!领取{{honggu}}红股</el-button>
                 <router-link to="/login" class="forget">已有财富链账号？去登录</router-link>
+                <router-link to="/registerTest" class="test">注册手机号用户</router-link>
             </div>
         </div>
     </div>
@@ -44,7 +54,15 @@ import axios from 'axios'
                 },
                 checked:true,
                 honggu:'',
-                bigImg:true
+                bigImg:true,
+                radio:'eos账号用户注册'
+            }
+        },
+        watch: {
+            radio(val) {
+                if(val == '手机号用户注册') {
+                    this.$router.push('/registerTest')
+                }
             }
         },
         mounted() {
@@ -86,6 +104,8 @@ import axios from 'axios'
                     this.$message.error('请输入正确的登录密码格式！');
                 }else if(!reg.test(this.formData.payPwd)) {
                     this.$message.error('请输入正确的资金密码格式！');
+                }else if(!this.formData.yaoqing) {
+                    this.$message.error('请输入邀请码！');
                 }else if(!this.formData.email){
                     this.$message.error('请输入常用邮箱地址！');
                 }else {
@@ -179,6 +199,12 @@ import axios from 'axios'
                     font-size: 14px;
                     color: #409eff;
                     float: right;
+                    margin-top: 20px;
+                }
+                .test {
+                    font-size: 14px;
+                    color: #409eff;
+                    float: left;
                     margin-top: 20px;
                 }
                 .rule {

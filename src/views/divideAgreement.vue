@@ -1,8 +1,8 @@
 <template>
     <div class="notice-list">
         <div class="nav-top clear">
-            <el-button type="primary" plain size="small" icon="el-icon-back" style="float: left;" @click="$router.go(-1)">返回</el-button>
-            <p>当前位置：<router-link to="/personCenter">个人中心</router-link> > <router-link v-if="$route.query.type == 'person'" to="/personApply">个人抵押TITT申请表</router-link><router-link v-if="$route.query.type == 'company'" to="/companyApply">企业抵押TITT申请表</router-link> > <router-link to="">《抵押分红文件》</router-link></p>
+            <el-button type="primary" plain size="small" icon="el-icon-back" style="float: left;" @click="$router.push('/personCenter')">返回</el-button>
+            <p>当前位置：<router-link to="/personCenter">个人中心</router-link> > <router-link v-if="$route.query.type == 'person'" to="/personApply">个人抵押TITT申请表</router-link><router-link v-if="$route.query.type == 'company'" to="/companyApply">企业抵押TITT申请表</router-link> > <router-link to="">《抵押说明文件》</router-link></p>
         </div>
         <div class="list">
             <div class="content-text">

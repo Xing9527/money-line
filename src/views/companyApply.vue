@@ -47,7 +47,7 @@
                         <div class="upload clear">
                             <el-upload
                                     class="avatar-uploader"
-                                    action="http://caifulian.mc8866.net/index/index/uploadimg"
+                                    :action="uploadUrl"
                                     :show-file-list="false"
                                     :on-success="handleAvatarSuccess"
                                     :before-upload="beforeAvatarUpload">
@@ -97,12 +97,12 @@
                     <div class="row">
                         <div class="col-lg-6 cold--md-6 col-sm-12">
                             <el-form-item label="邀请码" prop="yaoqingma">
-                                <el-input placeholder="请输入邀请码" v-model="ruleForm.yaoqingma"></el-input>
+                                <el-input placeholder="请输入邀请码" v-model="ruleForm.yaoqingma" :disabled="true"></el-input>
                             </el-form-item>
                         </div>
                         <div class="col-lg-5 cold--md-5 col-sm-12">
                             <el-form-item label="推广码" prop="tuiguangma">
-                                <el-input placeholder="请输入推广码" v-model="ruleForm.tuiguangma"></el-input>
+                                <el-input placeholder="请输入推广码" v-model="ruleForm.tuiguangma" :disabled="true"></el-input>
                             </el-form-item>
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                         <div class="col-lg-9 cold--md-9 col-sm-12">
                             <el-form-item label="抵押数量" prop="num">
                                 <el-input placeholder="请输入您的抵押数量" style="max-width: 337px" v-model="ruleForm.num"></el-input>
-                                <span style="color: #c2c7ce;font-size: 14px">（最低50，最高2499999）</span>
+                                <span style="color: #c2c7ce;font-size: 14px">（最低1000，最高500000）</span>
                             </el-form-item>
                         </div>
                     </div>
@@ -146,6 +146,26 @@
                             </el-form-item>
                         </div>
                     </div>
+                    <div class="haxi" style="margin-bottom: 40px;">
+                        <p>接收抵押官方TITT账号</p>
+                        <span>fortunetitt3</span>
+                    </div>
+                    <div class="two-code">
+                        <p class="title">接收抵押官方TITT二维码</p>
+                        <div class="upload clear">
+                            <img src="../assets/images/paytitt.png" alt=""/>
+                        </div>
+                    </div>
+                    <div class="haxi" style="margin-bottom: 40px;">
+                        <p>接收抵押官方EOS账号</p>
+                        <span>fortunetitt3</span>
+                    </div>
+                    <div class="two-code">
+                        <p class="title">接收抵押官方EOS二维码</p>
+                        <div class="upload clear">
+                            <img src="../assets/images/payeos.png" alt=""/>
+                        </div>
+                    </div>
                     <div class="haxi">
                         <p>参与抵押的EOS账号</p>
                         <el-form-item label="" prop="eos">
@@ -157,7 +177,7 @@
                         <div class="upload clear">
                             <el-upload
                                     class="avatar-uploader"
-                                    action="http://caifulian.mc8866.net/index/index/uploadimg"
+                                    :action="uploadUrl"
                                     :show-file-list="false"
                                     :on-success="handleAvatarSuccess1"
                                     :before-upload="beforeAvatarUpload">
@@ -180,7 +200,7 @@
                         <div class="upload clear">
                             <el-upload
                                     class="avatar-uploader"
-                                    action="http://caifulian.mc8866.net/index/index/uploadimg"
+                                    :action="uploadUrl"
                                     :show-file-list="false"
                                     :on-success="handleAvatarSuccess2"
                                     :before-upload="beforeAvatarUpload">
@@ -207,7 +227,7 @@
                         <div class="upload clear">
                             <el-upload
                                     class="avatar-uploader"
-                                    action="http://caifulian.mc8866.net/index/index/uploadimg"
+                                    :action="uploadUrl"
                                     :show-file-list="false"
                                     :on-success="handleAvatarSuccess3"
                                     :before-upload="beforeAvatarUpload">
@@ -238,7 +258,7 @@
         if (value === '') {
             callback(new Error('请输入抵押数量'));
         } else {
-            if (value>=50 &&value <2500000) {
+            if (value>=1000 &&value <=500000) {
                 callback();
             }else {
                 callback(new Error('请输入正确的抵押数量'));
@@ -250,7 +270,9 @@
         data() {
             return {
                 ruleForm:{
-                    type:'超级节点'
+                    type:'超级节点',
+                    yaoqingma:'',
+                    tuiguangma:''
                 },
                 diyaqixian:'6',
                 yuejiesuo:'12',
@@ -306,12 +328,15 @@
                 img1:'',
                 img2:'',
                 img3:'',
-                show:true
+                show:true,
+                uploadUrl:''
             }
         },
         mounted() {
+            this.uploadUrl = process.env.UPLOAD_URL;
             if(sessionStorage.getItem('user')) {
                 this.ruleForm.jieshouzhanghao = JSON.parse(sessionStorage.getItem('user')).username
+                this.getCode()
                 this.show = false
             }else {
                 this.show = true
@@ -319,6 +344,14 @@
             this.getHuodongInfo()
         },
         methods: {
+            getCode() {
+                this.$axios.get('userinfo/getUserinfo',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.data) {
+                        this.ruleForm.yaoqingma = res.data.data.fyaoqingma;
+                        this.ruleForm.tuiguangma = res.data.data.ftuiguangma
+                    }
+                })
+            },
             getHuodongInfo() {
                 if(this.$route.query.detail) {
                     var detail = JSON.parse(this.$route.query.detail);

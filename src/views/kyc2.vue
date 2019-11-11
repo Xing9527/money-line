@@ -39,7 +39,7 @@
                         <p>个人身份证正面照片</p>
                         <el-upload
                             class="avatar-uploader"
-                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :action="uploadUrl"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess1"
                             :before-upload="beforeAvatarUpload">
@@ -59,7 +59,7 @@
                         <p>个人身份证背面照片</p>
                         <el-upload
                             class="avatar-uploader"
-                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :action="uploadUrl"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess2"
                             :before-upload="beforeAvatarUpload">
@@ -79,7 +79,7 @@
                         <p>手持身份证正面照片</p>
                         <el-upload
                             class="avatar-uploader"
-                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :action="uploadUrl"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess3"
                             :before-upload="beforeAvatarUpload">
@@ -135,9 +135,11 @@
                 ruleForm:{
                     country:'中国大陆'
                 },
+                uploadUrl:''
             }
         },
         mounted() {
+            this.uploadUrl = process.env.UPLOAD_URL;
             this.getInfo()
             this.phoneList = phone;
         },

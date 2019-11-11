@@ -28,18 +28,18 @@
                         </div>
                         <div class="col-lg-5 cold--md-5 col-sm-12">
                             <el-form-item label="邀请码" prop="yaoqingma">
-                                <el-input placeholder="请输入邀请码" v-model="ruleForm.yaoqingma"></el-input>
+                                <el-input placeholder="请输入邀请码" v-model="ruleForm.yaoqingma" :disabled="true"></el-input>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-6 cold--md-6 col-sm-12">
                             <el-form-item label="推广码" prop="tuiguangma">
-                                <el-input placeholder="请输入推广码" v-model="ruleForm.tuiguangma"></el-input>
+                                <el-input placeholder="请输入推广码" v-model="ruleForm.tuiguangma" :disabled="true"></el-input>
                             </el-form-item>
                         </div>
                         <div class="col-lg-5 cold--md-5 col-sm-12">
-                            <p style="margin-left: 20px;">（如果无推广码，可填写通用推广码cfl12345）</p>
+<!--                            <p style="margin-left: 20px;">（如果无推广码，可填写通用推广码cfl12345）</p>-->
                         </div>
                     </div>
                     <div class="row">
@@ -60,7 +60,7 @@
                         <div class="upload clear">
                             <el-upload
                                     class="avatar-uploader"
-                                    action="http://caifulian.mc8866.net/index/index/uploadimg"
+                                    :action="uploadUrl"
                                     :show-file-list="false"
                                     :on-success="handleAvatarSuccess1"
                                     :before-upload="beforeAvatarUpload">
@@ -81,7 +81,7 @@
                             <p>个人身份证正面照片</p>
                             <el-upload
                                     class="avatar-uploader"
-                                    action="http://caifulian.mc8866.net/index/index/uploadimg"
+                                    :action="uploadUrl"
                                     :show-file-list="false"
                                     :on-success="handleAvatarSuccess2"
                                     :before-upload="beforeAvatarUpload">
@@ -101,7 +101,7 @@
                             <p>个人身份证背面照片</p>
                             <el-upload
                                     class="avatar-uploader"
-                                    action="http://caifulian.mc8866.net/index/index/uploadimg"
+                                    :action="uploadUrl"
                                     :show-file-list="false"
                                     :on-success="handleAvatarSuccess3"
                                     :before-upload="beforeAvatarUpload">
@@ -130,7 +130,10 @@
         name: "notice-list",
         data() {
             return {
-                ruleForm:{},
+                ruleForm:{
+                    yaoqingma:'',
+                    tuiguangma:''
+                },
                 rules: {
                     name: [
                         { required: true, message : '请输入姓名', trigger: 'blur' }
@@ -141,6 +144,9 @@
                     weixin: [
                         { required: true, message: '请输入微信号', trigger: 'blur' },
                     ],
+                    yaoqingma: [
+                        { required: true, message: '请输入您的邀请码', trigger: 'blur' },
+                    ],
                     tuiguangma: [
                         { required: true, message: '请输入您的推广码', trigger: 'blur' },
                     ],
@@ -148,18 +154,31 @@
                         { required: true, message: '请输入邮箱地址', trigger: 'blur' },
                     ],
                     link: [
-                        { required: true, message: '请输入接收奖励TITT地址', trigger: 'blur' },
+                        { message: '请输入接收奖励TITT地址', trigger: 'blur' },
                     ]
                 },
                 img1:'',
                 img2:'',
-                img3:''
+                img3:'',
+                uploadUrl:''
             }
         },
         mounted() {
-
+            this.uploadUrl = process.env.UPLOAD_URL;
+            if(sessionStorage.getItem('token')) {
+                this.getCode()
+            }
         },
         methods: {
+            getCode() {
+                this.$axios.get('userinfo/getUserinfo',{token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.data) {
+                        res.data
+                        this.ruleForm.yaoqingma = res.data.data.fyaoqingma;
+                        this.ruleForm.tuiguangma = res.data.data.ftuiguangma
+                    }
+                })
+            },
             handleAvatarSuccess1(res, file) {
                 this.img1 = process.env.BASE_URL + res.data.path;
             },

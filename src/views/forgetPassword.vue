@@ -87,7 +87,7 @@
                  var reg = new RegExp(/^\d{6,}$/);
                 if(!this.formData.pwd || this.formData.pwd.length < 8) {
                     this.$message.error('请输入正确的登录密码格式！');
-                } else if(reg.test(this.formData.payPwd)) {
+                } else if(!reg.test(this.formData.payPwd)) {
                     this.$message.error('请输入正确的交易密码格式！');
                 } else {
                     var params = {

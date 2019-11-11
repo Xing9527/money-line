@@ -11,13 +11,13 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {  //使用"/api"来代替"http://f.apiplus.c"
-            target: 'http://caifulian.mc8866.net/index/', //源地址
-            changeOrigin: true, //改变源
-            pathRewrite: {
-                '^/api': '/' //路径重写
-            }
-        }
+      // '/api': {  //使用"/api"来代替"http://f.apiplus.c"
+      //       target: 'http://admin.fortunechain.org/index/', //源地址
+      //       changeOrigin: true, //改变源
+      //       pathRewrite: {
+      //           '^/api': '/' //路径重写
+      //       }
+      //   }
     },
 
     // Various Dev Server settings
@@ -26,7 +26,7 @@ module.exports = {
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
-    poll: true, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
+    poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
 
     /**
@@ -46,12 +46,12 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+      index: path.resolve(__dirname, '../dist_'+process.env.env_config+'/index.html'),
 
-    // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: './',
+      // Paths
+      assetsRoot: path.resolve(__dirname, '../dist_'+process.env.env_config),
+      assetsSubDirectory: 'static',
+      assetsPublicPath: './',
 
     /**
      * Source Maps

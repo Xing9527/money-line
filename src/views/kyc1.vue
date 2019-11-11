@@ -69,11 +69,9 @@
                     ],
                     name: [
                         { required: true, message: '请输入姓名', trigger: 'blur' },
-                        { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
                     ],
                     card: [
                         { required: true, message: '请输入身份证号', trigger: 'blur' },
-                        { min: 18, max: 18, message: '请输入正确格式', trigger: 'blur' }
                     ]
                 }
             }

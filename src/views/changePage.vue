@@ -30,10 +30,10 @@
                         <span>总流通盘数据</span>
                         <span>4000000000</span>
                     </li>
-                    <li>
-                        <span>总储备仓数据</span>
-                        <span>{{info1.zongchubei}}</span>
-                    </li>
+<!--                    <li>-->
+<!--                        <span>总储备仓数据</span>-->
+<!--                        <span>{{info1.zongchubei}}</span>-->
+<!--                    </li>-->
                     <li>
                         <span>抵押储备仓数据</span>
                         <span>{{info1.diyachubei}}</span>
@@ -42,10 +42,10 @@
                         <span>当前流通盘数据</span>
                         <span>{{info1.dangqianliutong}}</span>
                     </li>
-                    <li>
-                        <span>CW=</span>
-                        <span>0.02-2%</span>
-                    </li>
+<!--                    <li>-->
+<!--                        <span>CW=</span>-->
+<!--                        <span>0.02-2%</span>-->
+<!--                    </li>-->
                 </ul>
             </div>
             <div class="left-bottom">
@@ -156,21 +156,21 @@
                                 </div>
                                 <p>≈{{eos}}eos</p>
                                 <el-button type="danger" style="width: 100%;" @click="convert('eos')">置换EOS</el-button>
-                                <span class="buy-nums">最小交易值10TTTT</span>
+                                <span class="buy-nums">最小交易值10TITT</span>
                             </div>
                         </el-col>
                     </el-row>
                 </div>
-                <div class="router-two col-lg-4 col-md-6 col-sm-12">
-                    <router-link to="/myWallet" class="router-item">
-                        <img src="../assets/images/qianbao.png" alt=""/>
-                        <span>我的钱包</span>
-                    </router-link>
-                    <a href="https://eospark.com/account/tittbancor14" target="_blank" class="router-item">
-                        <img src="../assets/images/liulanqi.png" alt=""/>
-                        <span>区块链浏览器</span>
-                    </a>
-                </div>
+<!--                <div class="router-two col-lg-4 col-md-6 col-sm-12">-->
+<!--                    <router-link to="/myWallet" class="router-item">-->
+<!--                        <img src="../assets/images/qianbao.png" alt=""/>-->
+<!--                        <span>我的钱包</span>-->
+<!--                    </router-link>-->
+<!--                    <a href="https://eospark.com/account/tittbancor14" target="_blank" class="router-item">-->
+<!--                        <img src="../assets/images/liulanqi.png" alt=""/>-->
+<!--                        <span>区块链浏览器</span>-->
+<!--                    </a>-->
+<!--                </div>-->
             </div>
             <div class="right-bottom">
                 <div class="changer-recard-title clear">

@@ -45,7 +45,7 @@
                     <p>企业执照的照片</p>
                     <el-upload
                             class="avatar-uploader"
-                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :action="uploadUrl"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess1"
                             :before-upload="beforeAvatarUpload">
@@ -70,7 +70,7 @@
                     <p>门头招牌的照片</p>
                     <el-upload
                             class="avatar-uploader"
-                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :action="uploadUrl"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess2"
                             :before-upload="beforeAvatarUpload">
@@ -95,7 +95,7 @@
                     <p>企业外景的照片</p>
                     <el-upload
                             class="avatar-uploader"
-                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :action="uploadUrl"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess3"
                             :before-upload="beforeAvatarUpload">
@@ -120,7 +120,7 @@
                     <p>企业内景的照片</p>
                     <el-upload
                             class="avatar-uploader"
-                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :action="uploadUrl"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess4"
                             :before-upload="beforeAvatarUpload">
@@ -145,7 +145,7 @@
                     <p>企业荣誉的照片</p>
                     <el-upload
                             class="avatar-uploader"
-                            action="http://caifulian.mc8866.net/index/index/uploadimg"
+                            :action="uploadUrl"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess5"
                             :before-upload="beforeAvatarUpload">
@@ -217,10 +217,12 @@
                 },
                 imgList:[],
                 show:true,
-                bigImg:true
+                bigImg:true,
+                uploadUrl:''
             }
         },
         mounted() {
+            this.uploadUrl = process.env.UPLOAD_URL;
             if(sessionStorage.getItem('user')) {
                 this.show = false
             }else {

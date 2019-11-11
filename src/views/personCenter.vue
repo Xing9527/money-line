@@ -6,8 +6,9 @@
                     <div class="row">
                         <div class="info-left col-lg-4 col-md-4 col-sm-12">
 <!--                            <img style="width: 72px;height:72px;" src="../assets/images/center-header.jpg" alt=""/>-->
-                            <img style="width: 72px;height:72px;border-radius:50%" src="../assets/images/caifumiao.jpg" alt=""/>
+                            <img style="width: 72px;height:72px;border-radius:50%" src="../assets/images/userImg.jpg" alt=""/>
                             <p class="phone">{{userName}}</p>
+                            <el-button type="primary" size="small" style="margin-bottom: 10px" @click="$router.push('/upEosUser')" v-if="userName&&userName==mobile">绑定eos账号</el-button>
                             <span class="kyc" @click="routerPush('/kyc1')">
                                 <img v-if="info.kyc1 == 1" src="../assets/images/kyc1.png" alt=""/>
                                 <img v-else src="../assets/images/kyc2.png" alt=""/>
@@ -28,8 +29,9 @@
                             <p>TITT数量</p>
                             <h5>{{info.titt}}</h5>
                             <el-button size="small" type="primary" v-if="info.is_zhiyuanzhe == 2" plain style="margin:10px 10px 0 0;" @click="routerPush('/volunteerApply')">申请志愿者</el-button>
-                            <el-button size="small" type="info" v-else plain style="margin: 10px 10px 0 0;">申请志愿者</el-button>
-                            <el-button size="small" type="info" plain style="margin: 10px 0 0 0;" @click="copyVisiteCode(3)" class="copy3" :data-clipboard-text="copyTuiguangma">复制志愿者推广邀请码</el-button>
+                            <el-button size="small" type="danger" v-else plain style="margin: 10px 10px 0 0;">{{info.user_grade}}</el-button>
+                            <el-button type="primary" size="small" style="margin-bottom: 10px;width: 100px;margin-left: 0;" v-if="userName" @click="dialogPassword = true">修改密码</el-button>
+<!--                            <el-button size="small" type="info" plain style="margin: 10px 0 0 0;" @click="copyVisiteCode(3)" class="copy3" :data-clipboard-text="copyTuiguangma">复制志愿者推广邀请码</el-button>-->
                         </div>
                     </div>
                 </div>
@@ -38,7 +40,10 @@
                         <p>已解锁红股数量</p>
                         <p>{{info.hongguyijiesuo}}</p>
                     </div>
-                    <el-button class="btn1" size="small" @click="routerPush('/hongguChange')">兑换TITT</el-button>
+                    <div class="middle">
+                        <el-button class="btn1" size="small" @click="routerPush('/hongguChange')">兑换TITT</el-button>
+                        <el-button class="btn2" size="small" @click="routerPush('/hongguSend')">红股转赠</el-button>
+                    </div>
                     <div class="right">
                         <p>未解锁红股数量</p>
                         <p>{{info.hongguweijiesuo}}</p>
@@ -62,6 +67,7 @@
                     <el-button type="text" style="float: right;margin-right: 30px;" @click="routerPush('/chicangList')">更多持仓交易明细>></el-button>
                 </div>
                 <div class="invite">
+                    <h4 class="myfriend">我的人脉圈 <router-link to="/friendsList">好友列表>></router-link></h4>
                     <el-row class="row">
                         <el-col :span="8" class="friend">
                             <span>志愿者获得奖励</span>
@@ -92,6 +98,20 @@
                             <span>{{num6}}</span>
                         </el-col>
                     </el-row>
+                    <el-row class="row" style="margin-top:10px">
+                        <el-col :span="8" class="friend">
+                            <span>团队总量</span>
+                            <span>{{info.askpeople}}</span>
+                        </el-col>
+                        <el-col :span="8" class="friend">
+                            <span>个人贡献值</span>
+                            <span>{{info.countasknum}}</span>
+                        </el-col>
+                        <el-col :span="8" class="friend">
+                            <span>团队贡献值</span>
+                            <span>{{info.teamContribute}}</span>
+                        </el-col>
+                    </el-row>
                     <el-row class="invite-code" style="margin-top: 30px;">
                         <el-col :span="6">我的邀请码</el-col>
                         <el-col :span="14">{{copyValue}}</el-col>
@@ -101,13 +121,17 @@
                     </el-row>
                     <el-row class="invite-code">
                         <el-col :span="6">我的邀请链接</el-col>
-                        <el-col :span="14" style="word-wrap: break-word">http://www.fortunechain.one/test/#/register?i={{copyValue}}
+                        <el-col :span="14" style="word-wrap: break-word">http://www.fortunechain.org/#/registerTest?i={{copyValue}}
                         </el-col>
                         <el-col :span="4">
-                            <el-button size="small" type="primary" class="copy2" plain style="padding: 6px 12px;" :data-clipboard-text="'http://fortunechain.one/register?i=' + copyValue"
+                            <el-button size="small" type="primary" class="copy2" plain style="padding: 6px 12px;" :data-clipboard-text="'http://www.fortunechain.org/#/registerTest?i=' + copyValue"
                                        @click="copyVisiteCode(2)">复制
                             </el-button>
                         </el-col>
+                    </el-row>
+                    <el-row class="invite-code">
+                        <el-col :span="6" style="opacity: 0">占位</el-col>
+                        <el-col :span="6"><el-button size="small" @click="dialogVisible=true">查看邀请链接二维码</el-button></el-col>
                     </el-row>
                 </div>
                 <div class="award-record">
@@ -147,99 +171,221 @@
                         </el-pagination>
                     </div>
                 </div>
-                <div class="rules">
-                    <h5>奖励领取活动细则</h5>
-                    <div class="item">
-                        <p>1、活动期间，注册新账号即可获得注册奖励，后续将根据实际情况进行调整。</p>
-                        <p>2、好友通过你的邀请码、专属邀请链接、专属邀请二维码注册成功后，你的账户即刻获得邀请奖励；三种方式中的任意方式均可。</p>
-                        <p>3、通证保留随时对这侧领取TITT、邀请奖励TITT活动规则进行调整的权力，但是对你推荐的好友数量没有限制。</p>
-                        <p>4、通证会严查重复的或者虚假的账号，一经发现，将不会对注册及邀请进行奖励。</p>
-                    </div>
-                </div>
+<!--                <div class="rules">-->
+<!--                    <h5>奖励领取活动细则</h5>-->
+<!--                    <div class="item">-->
+<!--                        <p>1、活动期间，注册新账号即可获得注册奖励，后续将根据实际情况进行调整。</p>-->
+<!--                        <p>2、好友通过你的邀请码、专属邀请链接、专属邀请二维码注册成功后，你的账户即刻获得邀请奖励；三种方式中的任意方式均可。</p>-->
+<!--                        <p>3、通证保留随时对这侧领取TITT、邀请奖励TITT活动规则进行调整的权力，但是对你推荐的好友数量没有限制。</p>-->
+<!--                        <p>4、通证会严查重复的或者虚假的账号，一经发现，将不会对注册及邀请进行奖励。</p>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
             <div class="right col-lg-7 col-md-7 col-sm-12">
                 <div class="bledge-container">
-                    <h4>抵押活动信息</h4>
+                    <h4>会员卡信息</h4>
                     <div class="pledge">
                         <div class="pledge-top clear">
-                            <div class="all-pledge">
-                                <p>总抵押数量</p>
-                                <span>{{info.diyaNum}}</span>
+                            <!--<div class="all-pledge">-->
+                                <!--<p>总抵押数量</p>-->
+                                <!--<span>{{info.diyaNum}}</span>-->
+                            <!--</div>-->
+                            <h5>会员卡种类 <span style="font-size: 12px">（请点击会员卡的卡面，获取会员卡申请信息）</span></h5>
+                            <div class="vipKinds">
+                                <img v-for="item in cardList" :src="item.wenjian"  @click="addJinka(item.classify,item.id)" alt=""/>
                             </div>
-                            <h5>可参加抵押活动</h5>
-                            <p style="margin: 20px 0;">个人抵押</p>
-                            <el-button v-for="(item,index) in personList" :key="item.createtime" type="primary" style="margin:0px 30px 20px 0" size="small" @click="goDiya(item)">{{item.time1 | timeTrans}}{{item.title}}【<span v-if="item.type==2">企业抵押</span><span v-else>个人抵押</span>】</el-button>
-                            <p style="margin: 20px 0;">企业抵押</p>
-                            <el-button v-for="(item,index) in companyList" :key="item.createtime" type="primary" style="margin:0px 30px 20px 0" size="small" @click="goDiya(item)">{{item.time1 | timeTrans}}{{item.title}}【<span v-if="item.type==2">企业抵押</span><span v-else>个人抵押</span>】</el-button>
-                            <h5>已参加抵押活动</h5>
-                        </div>
-                        <div class="pledge-item"  v-for="(item,index) in doneHuodong" :key=index>
-                            <h5>财富链首期抵押分红活动</h5>
-                            <div class="bledge-content row">
-                                <div class="item-left col-lg-4 col-md-4 col-sm-12">
-                                    <div class="fang">
-                                        <p>预期分红</p>
-                                        <span>{{item.fenhong}}</span>
-                                    </div>
-                                    <p class="time">到期日：{{item.endtime}}</p>
-                                </div>
-                                <div class="item-right col-lg-8 col-md-8 col-sm-12">
-                                    <el-row class="right-row">
-                                        <el-col :span="7">已抵押TITT数量</el-col>
-                                        <el-col :span="17">{{item.num}}（个）</el-col>
-                                    </el-row>
-                                    <el-row class="right-row">
-                                        <el-col :span="7">抵押时间周期</el-col>
-                                        <el-col :span="17" style="padding-left: 5px;">{{item.diyatimezhouqi}}</el-col>
-                                    </el-row>
-                                    <el-row class="right-row">
-                                        <el-col :span="7">解锁条件</el-col>
-                                        <el-col :span="17" style="padding-left: 5px;">{{item.jiesuotiaojian}}</el-col>
-                                    </el-row>
-<!--                                    <el-row class="right-row">-->
-<!--                                        <el-col :span="7">抵押分红时间</el-col>-->
-<!--                                        <el-col :span="17" style="padding-left: 5px;">{{diyafenhongshijian}}</el-col>-->
-<!--                                    </el-row>-->
-                                    <el-row class="right-row">
-                                        <el-col :span="7">预期分红数量</el-col>
-                                        <el-col :span="17" style="padding-left: 5px;">{{item.yuqifenhongliang}}（个）</el-col>
-                                    </el-row>
-                                    <el-row class="right-row">
-                                        <el-col :span="7">抵押分红解锁</el-col>
-                                        <el-col :span="17" style="padding-left: 5px;">{{item.diyafenhongjiesuo}}</el-col>
-                                    </el-row>
-                                    <el-row class="right-row">
-                                        <el-col :span="7">活动状态</el-col>
-                                        <el-col :span="17" style="padding-left: 5px;">
-                                            <span v-if="item.endStatus == 2">已结束</span>
-                                            <span v-else>未结束</span>
-                                            <el-button type="text" v-if="item.end_display == 1" style="color:#f07e1b;margin-left:10px" @click="applyOver(item.pkid)">申请终止</el-button>
-                                        </el-col>
-                                    </el-row>
-                                </div>
+                            <!--<h5>可参加抵押活动</h5>-->
+                            <!--<p style="margin: 20px 0;">个人抵押</p>-->
+                            <!--<el-button v-for="(item,index) in personList" :key="item.createtime" type="primary" style="margin:0px 30px 20px 0" size="small" @click="goDiya(item)">{{item.time1 | timeTrans}}{{item.title}}【<span v-if="item.type==2">企业抵押</span><span v-else>个人抵押</span>】</el-button>-->
+                            <!--<p style="margin: 20px 0;">企业抵押</p>-->
+                            <!--<el-button v-for="(item,index) in companyList" :key="item.createtime" type="primary" style="margin:0px 30px 20px 0" size="small" @click="goDiya(item)">{{item.time1 | timeTrans}}{{item.title}}【<span v-if="item.type==2">企业抵押</span><span v-else>个人抵押</span>】</el-button>-->
+                            <p style="border-top: 1px solid #ddd;padding: 15px 0;color: #000;">已持有会员卡抵押总量 <span style="float: right;">{{diyaTotal}}TITT</span></p>
+                            <p style="border-top: 1px solid #ddd;border-bottom: 1px solid #ddd;padding: 15px 0;color: #000;">已持有会员卡数量 <span style="float: right;">{{total3}}张</span></p>
+                            <p style="border-top: 1px solid #ddd;border-bottom: 1px solid #ddd;padding: 15px 0;color: #000;">抵押红股总量 <span style="float: right;">{{total4}}</span></p>
+                            <h5>已持有会员卡</h5>
+                            <div class="vipList">
+                                <img style="width: 200px;height: 120px;cursor: pointer;" :src="item.wenjian" @click="getVipDetail(item)"  v-for="(item,index) in doneHuodong" :key="index" alt=""/>
+                            </div>
+                            <div class="block">
+                                <el-pagination
+                                @current-change="handleCurrentChange"
+                                :current-page="page3"
+                                layout="total, prev, pager, next, jumper"
+                                :total="total3">
+                                </el-pagination>
                             </div>
                         </div>
-                        <div class="block">
-                            <el-pagination
-                                    @current-change="handleCurrentChange"
-                                    :current-page="page3"
-                                    layout="total, prev, pager, next, jumper"
-                                    :total="total3">
-                            </el-pagination>
-                        </div>
+                        <!--<div class="pledge-item"  v-for="(item,index) in doneHuodong" :key="index">-->
+                            <!--<h5>财富链首期抵押分红活动</h5>-->
+                            <!--<div class="bledge-content row">-->
+                                <!--<div class="item-left col-lg-4 col-md-4 col-sm-12">-->
+                                    <!--<div class="fang">-->
+                                        <!--<p>预期分红</p>-->
+                                        <!--<span>{{item.fenhong}}</span>-->
+                                    <!--</div>-->
+                                    <!--<p class="time">到期日：{{item.endtime}}</p>-->
+                                <!--</div>-->
+                                <!--<div class="item-right col-lg-8 col-md-8 col-sm-12">-->
+                                    <!--<el-row class="right-row">-->
+                                        <!--<el-col :span="7">已抵押TITT数量</el-col>-->
+                                        <!--<el-col :span="17">{{item.num}}（个）</el-col>-->
+                                    <!--</el-row>-->
+                                    <!--<el-row class="right-row">-->
+                                        <!--<el-col :span="7">抵押时间周期</el-col>-->
+                                        <!--<el-col :span="17" style="padding-left: 5px;">{{item.diyatimezhouqi}}</el-col>-->
+                                    <!--</el-row>-->
+                                    <!--<el-row class="right-row">-->
+                                        <!--<el-col :span="7">解锁条件</el-col>-->
+                                        <!--<el-col :span="17" style="padding-left: 5px;">{{item.jiesuotiaojian}}</el-col>-->
+                                    <!--</el-row>-->
+<!--&lt;!&ndash;                                    <el-row class="right-row">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-col :span="7">抵押分红时间</el-col>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <el-col :span="17" style="padding-left: 5px;">{{diyafenhongshijian}}</el-col>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </el-row>&ndash;&gt;-->
+                                    <!--<el-row class="right-row">-->
+                                        <!--<el-col :span="7">预期分红数量</el-col>-->
+                                        <!--<el-col :span="17" style="padding-left: 5px;">{{item.yuqifenhongliang}}（个）</el-col>-->
+                                    <!--</el-row>-->
+                                    <!--<el-row class="right-row">-->
+                                        <!--<el-col :span="7">抵押分红解锁</el-col>-->
+                                        <!--<el-col :span="17" style="padding-left: 5px;">{{item.diyafenhongjiesuo}}</el-col>-->
+                                    <!--</el-row>-->
+                                    <!--<el-row class="right-row">-->
+                                        <!--<el-col :span="7">活动状态</el-col>-->
+                                        <!--<el-col :span="17" style="padding-left: 5px;">-->
+                                            <!--<span v-if="item.endStatus == 2">已结束</span>-->
+                                            <!--<span v-else>未结束</span>-->
+                                            <!--<el-button type="text" v-if="item.end_display == 1" style="color:#f07e1b;margin-left:10px" @click="applyOver(item.pkid)">申请终止</el-button>-->
+                                        <!--</el-col>-->
+                                    <!--</el-row>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="block">-->
+                            <!--<el-pagination-->
+                                    <!--@current-change="handleCurrentChange"-->
+                                    <!--:current-page="page3"-->
+                                    <!--layout="total, prev, pager, next, jumper"-->
+                                    <!--:total="total3">-->
+                            <!--</el-pagination>-->
+                        <!--</div>-->
                     </div>
                 </div>
             </div>
         </div>
+        <el-drawer :visible.sync="drawer" direction="rtl" :size="drawerSize">
+            <div style="text-align: center;width: 350px;">
+                <img style="width: 300px;height: 180px;" :src="cardDetail.wenjian" alt=""/>
+            </div>
+            <ul style="margin: 30px 0;color: #000;">
+                <li style="padding: 10px 10px;border-top: 1px solid #ddd;">
+                    <i class="iconfont icon-huiyuan-"></i>
+                    <span style="display: inline-block;margin: 0 0 0 10px;">会员卡名称：</span>
+                    <span style="float: right;">{{cardDetail.cardname}}</span>
+                </li>
+                <li style="padding: 10px 10px;border-top: 1px solid #ddd;">
+                    <i class="iconfont icon-diya-"></i>
+                    <span style="display: inline-block;margin: 0 0 0 10px;">抵押数量：</span>
+                    <span style="float: right;">{{cardDetail.titt_num}} </span>
+                </li>
+                <li style="padding: 10px 10px;border-top: 1px solid #ddd;">
+                    <i class="iconfont icon-youxiaoqixian"></i>
+                    <span style="display: inline-block;margin: 0 0 0 10px;">有效期限：</span>
+                    <span style="float: right;">{{cardDetail.createtime}} - {{cardDetail.endtime}}</span>
+                </li>
+                <li style="padding: 10px 10px;border-top: 1px solid #ddd;border-bottom: 1px solid #ddd;">
+                    <i class="iconfont icon-daoqifanhuanbenjin"></i>
+                    <span style="display: inline-block;margin: 0 0 0 10px;">到期后返还：</span>
+                    <span style="float: right;">{{cardDetail.giveback}}</span>
+                </li>
+            </ul>
+        </el-drawer>
+        <el-dialog title="" width="350px" :visible.sync="dialogJinka">
+            <div style="text-align: center">
+                <img style="width: 300px;" src="../assets/images/huodejinka.gif" alt=""/>
+            </div>
+        </el-dialog>
+        <el-dialog title="" width="280px" top="200px" :visible.sync="jingqinqidai">
+            <div style="text-align: center">
+                <p>本卡暂未上线，</p>
+                <p>请关注公告本卡上线日期</p>
+            </div>
+        </el-dialog>
+        <el-dialog title="" width="290px" :visible.sync="dialogVisible" @open="handleOpen">
+            <div style="border: 3px solid rgb(20,152,255);padding:10px;border-radius:6px">
+                <div style="text-align: center">
+                    <p>财富链，助力中国科技引领世界！</p>
+                    <p>我的专属邀请码</p>
+                    <p style="color: #333">{{copyValue}}</p>
+                </div>
+                <div  style="width: 150px;margin:10px auto 0">
+                    <div id="qrcode" ref="qrcode"></div>
+                </div>
+                <p style="text-align: center;margin: 10px 0;">扫码注册</p>
+                <div style="text-align: center">
+                    <img style="width: 30px;height: 30px;" src="../assets/images/logo.png" alt=""/>
+                    <span style="color: #f07e1b;font-size: 16px;font-weight: 700">财富链</span>
+                </div>
+            </div>
+        </el-dialog>
+        <el-dialog :visible.sync="dialogPassword" width="300px" @close="handleClose">
+            <h4 style="font-size: 18px;text-align: center;margin: -20px 0 20px">修改密码</h4>
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" size="medium">
+                <el-form-item prop="old_password">
+                    <el-row>
+                        <el-col :span="7" style="text-align: right;padding-right: 8px;"><span>当前密码:</span></el-col>
+                        <el-col :span="17">
+                            <el-input type="password" v-model.trim="ruleForm.old_password" size="large" placeholder="请输入当前密码"></el-input>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+                <el-form-item prop="new_password" style="margin-top: 20px;">
+                    <el-row>
+                        <el-col :span="7" style="text-align: right;padding-right: 8px;"><span>新密码:</span></el-col>
+                        <el-col :span="17">
+                            <el-input type="password" v-model.trim="ruleForm.new_password" size="large" placeholder="请输入新密码"></el-input>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+                <el-form-item prop="confirm_password" style="margin-top: 20px;">
+                    <el-row>
+                        <el-col :span="7" style="text-align: right;padding-right: 8px;"><span>确认密码:</span></el-col>
+                        <el-col :span="17">
+                            <el-input type="password" v-model.trim="ruleForm.confirm_password" size="large" placeholder="请确认密码"></el-input>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
+                <div style="text-align: center;">
+                    <el-button style="width: 80px;height: 36px;background: #f1f1f3;border: none;" @click="dialogPassword=false">取消</el-button>
+                    <el-button type="primary" style="width: 80px;height: 36px;" @click="changePwd('ruleForm')">确定</el-button>
+                </div>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import Clipboard from 'clipboard'
+    import QRCode from 'qrcodejs2'
     export default {
         name: "person-center",
         data() {
             return {
+                rules:{
+                    old_password: [
+                        { required: true, message: '请输入当前密码', trigger: 'blur' },
+                        { min: 8, max: 20, message: '最少8位', trigger: 'blur' }
+                    ],
+                    new_password: [
+                        { required: true, message: '请输入新密码', trigger: 'blur' },
+                        { min: 8, max: 20, message: '最少8位', trigger: 'blur' }
+                    ],
+                    confirm_password: [
+                        { required: true, message: '请输入确认密码', trigger: 'blur' },
+                        { min: 8, max: 20, message: '最少8位', trigger: 'blur' }
+                    ]
+                },
+                ruleForm:{},
                 awardList: [],
                 userName:'',
                 titt:'',
@@ -263,10 +409,21 @@
                 companyList:[],
                 doneHuodong:[],
                 total3:0,
+                total4:0,
                 chicangList:[],
                 hongguyijiesuo:'',
                 hongguweijiesuo:'',
-                info:{}
+                info:{},
+                dialogVisible:false,
+                code:true,
+                dialogPassword:false,
+                drawer:false,
+                drawerSize:'360',
+                cardDetail:{},
+                dialogJinka:false,
+                jingqinqidai:false,
+                cardList:[],
+                mobile:''
             }
         },
         mounted() {
@@ -275,17 +432,98 @@
             this.getAwardList();
             this.getNums();
             this.getDiya();
-            this.getDoneDiya();
+            this.getVipCard();
+            this.getCardList();
+            // this.getDoneDiya();
             this.getChicang();
             var str = JSON.parse(sessionStorage.getItem('user'));//获取邀请码
             this.copyValue = str.yaoqingma;
             this.copyTuiguangma = str.tuiguangma;
             this.userName = str.username;
+            this.mobile = str.mobile;
             this.titt = str.titt;
             this.hongguyijiesuo = str.hongguyijiesuo;
             this.hongguweijiesuo = str.hongguweijiesuo;
+
         },
         methods: {
+            addJinka(type,id) {
+                if(type == 1) {
+                    this.$axios.post('card/giveCard',{ token: sessionStorage.getItem('token') }).then(res => {
+                        if(res.data.sta == 200) {
+                            this.dialogJinka = true;
+                            this.getVipCard()
+                        }else {
+                            this.$message({
+                                showClose: true,
+                                message: res.data.msg,
+                                type: 'error'
+                            });
+                            if(res.data.sta == 401) {
+                                sessionStorage.removeItem('user')
+                                sessionStorage.removeItem('token')
+                                return
+                            }
+                        }
+                    })
+                }else {
+                    this.$router.push({path:'/vipApply',query:{id:id}})
+                }
+
+            },
+            handleClose() {
+                this.ruleForm = {};
+            },
+            changePwd(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        var params = {
+                            token:sessionStorage.getItem('token'),
+                            password:this.ruleForm.old_password,
+                            newpassword:this.ruleForm.new_password,
+                            rnewpassword:this.ruleForm.confirm_password
+                        }
+                        this.$axios.post('login/updatePassword',params).then(res => {
+                            if(res.data.sta != 200) {
+                                this.$message({
+                                    showClose: true,
+                                    message: res.data.msg,
+                                    type: 'error'
+                                });
+                            }else {
+                                this.$message({
+                                    showClose: true,
+                                    message: '密码修改成功！',
+                                    type: 'success'
+                                });
+                                this.dialogPassword = false;
+                            }
+                        })
+                    } else {
+                        this.$message({
+                            showClose: true,
+                            message: '请输入正确内容',
+                            type: 'error'
+                        });
+                        return false;
+                    }
+                });
+            },
+            qrcode () {
+                let qrcode = new QRCode('qrcode',{
+                    width: 150, // 设置宽度，单位像素
+                    height: 150, // 设置高度，单位像素
+                    text: 'http://www.fortunechain.org/#/registerTest?i=' + this.copyValue
+                })
+                this.code = false;
+            },
+            handleOpen() {
+                if(this.code) {
+                    this.$nextTick(() => {
+                        this.qrcode()
+                    })
+                }
+            },
             getInfo() {
                 this.$axios.get('user/userinfo',{token:sessionStorage.getItem('token')}).then(res => {
                     if(res.data.sta == 401) {
@@ -337,7 +575,7 @@
                 }
             },
             copyVisiteCode(val) {
-                if(this.info.is_zhiyuanzhe == 2) {
+                if(this.info.is_zhiyuanzhe == 2 && val == 3) {
                     this.$message.error('请先申请志愿者，通过后才可复制！');
                     return
                 }
@@ -374,7 +612,8 @@
             },
             handleCurrentChange(page) {
                 this.page3 = page;
-                this.getDoneDiya()
+                // this.getDoneDiya()
+                this.getVipCard()
             },
             getNewsList() {
                 this.$axios.get('index/jiangli',{page:this.page2,limit:4}).then(res => {
@@ -441,6 +680,32 @@
                         this.total3 = res.data.totalPage
                     }
                 })
+            },
+            getVipCard() {
+                this.$axios.get('card/getCardList',{page:this.page3,token:sessionStorage.getItem('token')}).then(res => {
+                    if(res.data.sta == 401) {
+                        sessionStorage.removeItem('user')
+                        sessionStorage.removeItem('token')
+                        return
+                    }
+                    if(res.data) {
+                        this.doneHuodong = res.data.data.data;
+                        this.total3 = res.data.data.total;
+                        this.diyaTotal = res.data.znum;
+                        this.total4 = res.data.jnum;
+                    }
+                })
+            },
+            getCardList() {
+                this.$axios.get('card/showCardList').then(res => {
+                    if(res.data) {
+                        this.cardList = res.data.data;
+                    }
+                })
+            },
+            getVipDetail(val) {
+                this.cardDetail = val;
+                this.drawer = true;
             },
             friendHonggu() {
                 this.$axios.post('user/apply_bonus_shares',{token:sessionStorage.getItem('token')}).then(res => {
@@ -565,9 +830,17 @@
                         }
                     }
                 }
-                .btn1 {
+                .middle {
+                    margin: 0 20px;
                     float: left;
-                    margin: 25px 10px 0;
+                    .btn1 {
+                        display: block;
+                    }
+                    .btn2 {
+                        display: block;
+                        margin-left: 0;
+                        margin-top: 10px;
+                    }
                 }
                 .right {
                     float: left;
@@ -588,6 +861,18 @@
                 padding: 30px 20px 20px;
                 border-radius: 3px;
                 box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.16);
+                .myfriend {
+                    margin-bottom: 10px;
+                    padding-bottom: 10px;
+                    font-size: 18px;
+                    border-bottom: 1px solid #f1f1f3;
+                    a {
+                        float: right;
+                        font-size: 12px;
+                        font-weight: 500;
+                        color: #aaa;
+                    }
+                }
                 .friend {
                     text-align: center;
                     border-right: 1px solid #ddd;
@@ -609,7 +894,7 @@
                         }
                         &:last-of-type {
                             color: #606266;
-                            font-size: 36px;
+                            font-size: 15px;
                             margin-top: 10px;
                             font-weight: 700;
                         }
@@ -780,6 +1065,21 @@
                     .block {
                         margin-top: 20px;
                         text-align: right;
+                    }
+                    .vipList {
+                        overflow: hidden;
+                        img {
+                            float: left;
+                            margin:10px 20px 10px 0 ;
+                        }
+                    }
+                    .vipKinds {
+                        margin: 20px 0;
+                        img {
+                            width: 200px;
+                            height: 120px;
+                            cursor: pointer;
+                        }
                     }
                 }
             }

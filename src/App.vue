@@ -47,4 +47,8 @@ export default {
     .apply .part .el-form-item__label {
         width: 80px!important;
     }
+
+    .center .el-drawer {
+        width: 350px!important;
+    }
 </style>

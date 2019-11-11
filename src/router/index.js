@@ -14,8 +14,11 @@ import kyc1 from '@/views/kyc1'
 import kyc2 from '@/views/kyc2'
 import companyPart from '@/views/companyPart'
 import login from '@/views/login'
-import register from '@/views/register'
+import upEosUser from '@/views/upEosUser'
+import register from '@/views/registerTest'
+import registerTest from '@/views/registerTest'
 import forgetPassword from '@/views/forgetPassword'
+import forgetPasswordTest from '@/views/forgetPasswordTest'
 import userRules from '@/views/userRules'
 import personApply from '@/views/personApply'
 import companyApply from '@/views/companyApply'
@@ -26,7 +29,11 @@ import awardDetail from '@/views/awardDetail'
 import chicangList from '@/views/chicangList'
 import chicangDetail from '@/views/chicangDetail'
 import hongguChange from '@/views/hongguChange'
+import hongguSend from '@/views/hongguSend'
 import hongguCode from '@/views/hongguCode'
+import vipApply from '@/views/vipApply'
+import friendsList from '@/views/friendsList'
+import secondFriends from '@/views/secondFriends'
 
 Vue.use(Router)
 
@@ -50,8 +57,11 @@ export default new Router({
         { path:'/kyc2', name:'kyc2', component:kyc2 },
         { path:'/companyPart', name:'companyPart', component:companyPart },
         { path:'/login', name:'login', component:login },
+        { path:'/upEosUser', name:'upEosUser', component:upEosUser },
         { path:'/register', name:'register', component:register },
+        { path:'/registerTest', name:'registerTest', component:registerTest },
         { path:'/forgetPassword', name:'forgetPassword', component:forgetPassword },
+        { path:'/forgetPasswordTest', name:'forgetPasswordTest', component:forgetPasswordTest },
         { path:'/userRules', name:'userRules', component:userRules },
         { path:'/personApply', name:'personApply', component:personApply },
         { path:'/companyApply', name:'companyApply', component:companyApply },
@@ -62,7 +72,11 @@ export default new Router({
         { path:'/chicangList', name:'chicangList', component:chicangList },
         { path:'/chicangDetail', name:'chicangDetail', component:chicangDetail },
         { path:'/hongguChange', name:'hongguChange', component:hongguChange },
+        { path:'/hongguSend', name:'hongguSend', component:hongguSend },
         { path:'/hongguCode', name:'hongguCode', component:hongguCode },
+        { path:'/vipApply', name:'vipApply', component:vipApply },
+        { path:'/friendsList', name:'friendsList', component:friendsList },
+        { path:'/secondFriends', name:'secondFriends', component:secondFriends },
       ]
     }
   ]

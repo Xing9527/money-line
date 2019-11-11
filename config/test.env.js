@@ -1,7 +1,11 @@
 'use strict'
-const merge = require('webpack-merge')
-const devEnv = require('./dev.env')
 
-module.exports = merge(devEnv, {
-  NODE_ENV: '"testing"'
+const merge = require('webpack-merge')
+const prodEnv = require('./prod.env')
+
+module.exports = merge(prodEnv, {
+    NODE_ENV: '"test"',
+    API: '"http://admin.clb528.cn/index/"',
+    BASE_URL: '"http://admin.clb528.cn"',
+    UPLOAD_URL:'"http://admin.clb528.cn/index/index/uploadimg"'
 })
